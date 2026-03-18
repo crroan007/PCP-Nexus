@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCP Nexus User Manual v4.5</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0f1b2d; --navy-light: #1a2a42; --slate: #334155; --slate-light: #64748b;
+    --blue-50: #eff6ff; --blue-100: #dbeafe; --blue-500: #3b82f6; --blue-600: #2563eb; --blue-700: #1d4ed8;
+    --green-50: #f0fdf4; --green-100: #dcfce7; --green-500: #22c55e; --green-600: #16a34a; --green-700: #15803d;
+    --amber-50: #fffbeb; --amber-100: #fef3c7; --amber-500: #f59e0b; --amber-600: #d97706;
+    --red-50: #fef2f2; --red-100: #fee2e2; --red-500: #ef4444; --red-600: #dc2626;
+    --purple-50: #faf5ff; --purple-100: #f3e8ff; --purple-500: #a855f7; --purple-600: #9333ea;
+    --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-300: #cbd5e1; --gray-400: #94a3b8;
+    --gray-500: #64748b; --gray-600: #475569; --gray-700: #334155; --gray-800: #1e293b; --gray-900: #0f172a;
+    --white: #ffffff;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    --nav-width: 280px; --header-height: 64px; --radius: 8px; --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+    --transition: 0.2s ease;
+  }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 24px); }
+  body { font-family: var(--font-sans); font-size: 16px; line-height: 1.7; color: var(--gray-800); background: var(--gray-50); -webkit-font-smoothing: antialiased; }
+  .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: var(--navy); color: var(--white); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .header-brand { display: flex; align-items: center; gap: 12px; }
+  .header-logo { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue-500), var(--green-500)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: white; }
+  .header-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+  .header-subtitle { font-size: 13px; color: var(--gray-400); margin-left: 12px; font-weight: 400; }
+  .header-version { font-size: 12px; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; font-weight: 500; color: var(--gray-300); }
+  .header-menu-btn { display: none; background: none; border: none; color: white; cursor: pointer; padding: 8px; }
+  .sidebar { position: fixed; top: var(--header-height); left: 0; bottom: 0; width: var(--nav-width); background: var(--white); border-right: 1px solid var(--gray-200); overflow-y: auto; padding: 20px 0; z-index: 90; transition: transform 0.3s ease; }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 4px; }
+  .nav-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400); padding: 16px 20px 6px; margin-top: 4px; }
+  .nav-section-label:first-child { margin-top: 0; padding-top: 4px; }
+  .nav-link { display: block; padding: 6px 20px; font-size: 14px; color: var(--gray-600); text-decoration: none; border-left: 3px solid transparent; transition: all var(--transition); line-height: 1.4; }
+  .nav-link:hover { color: var(--blue-600); background: var(--blue-50); }
+  .nav-link.active { color: var(--blue-700); background: var(--blue-50); border-left-color: var(--blue-600); font-weight: 600; }
+  .nav-link.sub { padding-left: 36px; font-size: 13px; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 85; }
+  .main { margin-left: var(--nav-width); margin-top: var(--header-height); min-height: calc(100vh - var(--header-height)); }
+  .content { max-width: 820px; margin: 0 auto; padding: 40px 40px 80px; }
+  .hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); border-radius: var(--radius-lg); padding: 48px 44px; color: var(--white); margin-bottom: 48px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: -30%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 70%); pointer-events: none; }
+  .hero h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; position: relative; }
+  .hero p { font-size: 16px; color: var(--gray-300); line-height: 1.6; max-width: 560px; position: relative; }
+  .hero-meta { display: flex; gap: 24px; margin-top: 20px; position: relative; }
+  .hero-meta span { font-size: 13px; color: var(--gray-400); display: flex; align-items: center; gap: 6px; }
+  .hero-meta .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .hero-meta .dot.blue { background: var(--blue-500); }
+  .hero-meta .dot.green { background: var(--green-500); }
+  .role-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px; }
+  .role-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 24px; transition: all var(--transition); cursor: default; }
+  .role-card:hover { border-color: var(--blue-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .role-card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
+  .role-card-icon.operator { background: var(--blue-100); }
+  .role-card-icon.supervisor { background: var(--green-100); }
+  .role-card-icon.admin { background: var(--purple-100); }
+  .role-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--gray-900); }
+  .role-card p { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+  .role-card .jump-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--blue-600); text-decoration: none; font-weight: 600; margin-top: 10px; }
+  .role-card .jump-link:hover { color: var(--blue-700); }
+  .section { margin-bottom: 56px; }
+  .section-anchor { display: block; position: relative; top: calc(-1 * var(--header-height) - 24px); visibility: hidden; }
+  h2 { font-size: 26px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.02em; margin-bottom: 8px; padding-bottom: 12px; border-bottom: 2px solid var(--gray-200); }
+  h2 .section-number { color: var(--blue-500); margin-right: 8px; font-weight: 700; }
+  .section-desc { font-size: 15px; color: var(--gray-500); margin-bottom: 28px; }
+  h3 { font-size: 19px; font-weight: 700; color: var(--gray-800); margin-top: 32px; margin-bottom: 12px; letter-spacing: -0.01em; }
+  h4 { font-size: 16px; font-weight: 700; color: var(--gray-700); margin-top: 24px; margin-bottom: 8px; }
+  p { margin-bottom: 16px; }
+  p + ul, p + ol { margin-top: -8px; }
+  ul, ol { padding-left: 24px; margin-bottom: 16px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--gray-400); }
+  strong { font-weight: 600; color: var(--gray-900); }
+  code { font-family: var(--font-mono); font-size: 0.875em; background: var(--gray-100); padding: 2px 6px; border-radius: 4px; color: var(--slate); border: 1px solid var(--gray-200); }
+  a { color: var(--blue-600); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .callout { border-radius: var(--radius); padding: 16px 20px; margin: 20px 0; display: flex; gap: 12px; font-size: 14px; line-height: 1.6; border-left: 4px solid; }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout-content { flex: 1; }
+  .callout-content strong { display: block; margin-bottom: 2px; font-size: 14px; }
+  .callout-content p { margin-bottom: 4px; }
+  .callout-content p:last-child { margin-bottom: 0; }
+  .callout.tip { background: var(--blue-50); border-color: var(--blue-500); }
+  .callout.tip .callout-icon { color: var(--blue-500); }
+  .callout.tip strong { color: var(--blue-700); }
+  .callout.warning { background: var(--amber-50); border-color: var(--amber-500); }
+  .callout.warning .callout-icon { color: var(--amber-500); }
+  .callout.warning strong { color: var(--amber-600); }
+  .callout.danger { background: var(--red-50); border-color: var(--red-500); }
+  .callout.danger .callout-icon { color: var(--red-500); }
+  .callout.danger strong { color: var(--red-600); }
+  .callout.new { background: var(--green-50); border-color: var(--green-500); }
+  .callout.new .callout-icon { color: var(--green-500); }
+  .callout.new strong { color: var(--green-700); }
+  .callout.admin { background: var(--purple-50); border-color: var(--purple-500); }
+  .callout.admin .callout-icon { color: var(--purple-500); }
+  .callout.admin strong { color: var(--purple-600); }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
+  thead th { background: var(--gray-50); font-weight: 600; color: var(--gray-700); text-align: left; padding: 12px 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--gray-200); }
+  tbody td { padding: 10px 16px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--gray-50); }
+  .steps { counter-reset: step; list-style: none; padding-left: 0; margin: 20px 0; }
+  .steps li { counter-increment: step; display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--gray-100); align-items: flex-start; }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before { content: counter(step); flex-shrink: 0; width: 28px; height: 28px; background: var(--blue-600); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 1px; }
+  .steps li .step-content { flex: 1; }
+  .steps li .step-content strong { color: var(--gray-900); }
+  .diagram-container { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 32px; margin: 24px 0; text-align: center; box-shadow: var(--shadow-sm); }
+  .diagram-container svg { max-width: 100%; height: auto; }
+  .diagram-label { font-size: 13px; color: var(--gray-500); margin-top: 16px; font-weight: 500; font-style: italic; }
+  .checklist { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 24px 28px; margin: 20px 0; }
+  .checklist h4 { margin-top: 0; margin-bottom: 14px; }
+  .checklist ul { list-style: none; padding: 0; margin: 0; }
+  .checklist li { padding: 8px 0; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before { content: ''; width: 18px; height: 18px; flex-shrink: 0; border: 2px solid var(--gray-300); border-radius: 4px; }
+  .version-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.04em; vertical-align: middle; }
+  .version-badge.v44 { background: var(--blue-100); color: var(--blue-700); }
+  .version-badge.v45 { background: var(--green-100); color: var(--green-700); }
+  .pipeline-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+  .pipeline-badge.phase1 { background: var(--blue-100); color: var(--blue-700); }
+  .pipeline-badge.phase2 { background: var(--green-100); color: var(--green-700); }
+  .status-row { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .status-dot.green { background: var(--green-500); }
+  .status-dot.amber { background: var(--amber-500); }
+  .status-dot.red { background: var(--red-500); }
+  details { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); margin: 16px 0; }
+  details summary { padding: 14px 20px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--gray-700); list-style: none; display: flex; align-items: center; gap: 8px; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: '\25B8'; transition: transform 0.2s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .details-content { padding: 0 20px 16px; }
+  .footer { text-align: center; padding: 40px; border-top: 1px solid var(--gray-200); color: var(--gray-400); font-size: 13px; margin-top: 40px; }
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); z-index: 95; box-shadow: var(--shadow-lg); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.open { display: block; z-index: 90; }
+    .main { margin-left: 0; }
+    .content { padding: 24px 20px 60px; }
+    .header-menu-btn { display: block; }
+    .role-cards { grid-template-columns: 1fr; }
+    .hero { padding: 32px 24px; }
+    .hero h1 { font-size: 24px; }
+  }
+  @media print {
+    @page { margin: 1.8cm 1.5cm; size: letter; }
+    .header, .sidebar, .sidebar-overlay, .header-menu-btn { display: none !important; }
+    .main { margin-left: 0 !important; margin-top: 0 !important; }
+    .content { max-width: 100%; padding: 0; }
+    .hero { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; page-break-after: always; }
+    .section { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    .diagram-container { page-break-inside: avoid; }
+    .callout { page-break-inside: avoid; }
+    table { page-break-inside: avoid; }
+    body { font-size: 11pt; line-height: 1.5; }
+    a { color: var(--gray-800); text-decoration: none; }
+    a[href]::after { content: none; }
+    .role-cards { grid-template-columns: repeat(3, 1fr); }
+    .role-card { border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-brand">
+    <button class="header-menu-btn" onclick="toggleSidebar()" aria-label="Toggle navigation">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <div class="header-logo">N</div>
+    <span class="header-title">PCP Nexus</span>
+    <span class="header-subtitle">User Manual</span>
+  </div>
+  <span class="header-version">v4.5 &mdash; March 2026</span>
+</header>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="nav-section-label">Overview</div>
+  <a class="nav-link" href="#welcome">Welcome</a>
+  <a class="nav-link" href="#quick-start">Quick Start</a>
+  <a class="nav-link" href="#roles">Your Role</a>
+  <div class="nav-section-label">System</div>
+  <a class="nav-link" href="#what-is-nexus">What Is PCP Nexus?</a>
+  <a class="nav-link sub" href="#architecture">System Architecture</a>
+  <a class="nav-link sub" href="#two-pipelines">The Two Pipelines</a>
+  <a class="nav-link" href="#requirements">System Requirements</a>
+  <div class="nav-section-label">Interface</div>
+  <a class="nav-link" href="#main-window">The Main Window</a>
+  <a class="nav-link" href="#console">Console Tab</a>
+  <a class="nav-link" href="#settings">Settings</a>
+  <div class="nav-section-label">Daily Operations</div>
+  <a class="nav-link" href="#daily-procedures">Daily Procedures</a>
+  <a class="nav-link" href="#phase1-workflow">Phase 1: Affidavits</a>
+  <a class="nav-link" href="#phase2-workflow">Phase 2: Petitions</a>
+  <a class="nav-link" href="#dashboard">Dashboard &amp; Reporting</a>
+  <div class="nav-section-label">Advanced</div>
+  <a class="nav-link" href="#deduplication">Deduplication</a>
+  <a class="nav-link" href="#csv-handoff">CSV Handoff</a>
+  <a class="nav-link" href="#backfill">Hourly Backfill</a>
+  <a class="nav-link" href="#keywords">Keyword Monitoring</a>
+  <div class="nav-section-label">Support</div>
+  <a class="nav-link" href="#troubleshooting">Troubleshooting</a>
+  <a class="nav-link" href="#checklists">Checklists</a>
+  <a class="nav-link" href="#revision-history">Revision History</a>
+</nav>
+
+<main class="main">
+<div class="content">
+
+  <span class="section-anchor" id="welcome"></span>
+  <div class="hero">
+    <h1>PCP Nexus User Manual</h1>
+    <p>Mission-critical document automation for court filings. This guide covers everything you need to operate, monitor, and maintain PCP Nexus &mdash; from daily checks to advanced configuration.</p>
+    <div class="hero-meta">
+      <span><span class="dot blue"></span> Version 4.5</span>
+      <span><span class="dot green"></span> March 2026</span>
+      <span>Professional Civil Process of Texas, Inc.</span>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="quick-start"></span>
+  <div class="section">
+    <h2><span class="section-number">01</span> Quick Start</h2>
+    <p class="section-desc">Get the system running in four steps.</p>
+    <ol class="steps">
+      <li><div class="step-content"><strong>Open Outlook</strong><br>Launch Microsoft Outlook Classic and confirm it is logged into the correct mailbox. Outlook must be running as Administrator.</div></li>
+      <li><div class="step-content"><strong>Launch PCP Nexus</strong><br>Open the PCP Nexus application from the desktop or Start menu.</div></li>
+      <li><div class="step-content"><strong>Start the Engine</strong><br>Click <strong>Start Engine</strong> in the main window &mdash; or let Auto-Start handle it if enabled.</div></li>
+      <li><div class="step-content"><strong>Verify the Status Bar</strong><br>Watch the footer status bar. Once it turns <strong style="color: var(--green-600);">green</strong>, the system is live and processing.</div></li>
+    </ol>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>Tip</strong>
+        <p>All settings, databases, logs, and backups live in <code>C:\ProgramData\PCP-Automation\</code>. You should never need to navigate there during normal operations.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="roles"></span>
+  <div class="section">
+    <h2><span class="section-number">02</span> Your Role</h2>
+    <p class="section-desc">PCP Nexus serves three types of users. Find your role and jump to the sections that matter most to you.</p>
+    <div class="role-cards">
+      <div class="role-card">
+        <div class="role-card-icon operator">&#128100;</div>
+        <h3>Operator</h3>
+        <p>Daily monitoring, exception review, and confirming the nightly handover completed.</p>
+        <a class="jump-link" href="#daily-procedures">Jump to Daily Procedures &rarr;</a>
+      </div>
+      <div class="role-card">
+        <div class="role-card-icon supervisor">&#128101;</div>
+        <h3>Supervisor</h3>
+        <p>Validate compliance, spot-check outputs, and handle escalations flagged by operators.</p>
+        <a class="jump-link" href="#dashboard">Jump to Dashboard &rarr;</a>
+      </div>
+      <div class="role-card">
+        <div class="role-card-icon admin">&#9881;&#65039;</div>
+        <h3>Administrator</h3>
+        <p>Configuration changes, folder path updates, and advanced troubleshooting.</p>
+        <a class="jump-link" href="#settings">Jump to Settings &rarr;</a>
+      </div>
+    </div>
+    <div class="callout danger">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Operators: Do Not Edit Configuration Files</strong>
+        <p>Changes to configuration files can disrupt the entire pipeline. If something looks wrong, contact your Administrator.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="what-is-nexus"></span>
+  <div class="section">
+    <h2><span class="section-number">03</span> What Is PCP Nexus?</h2>
+    <p class="section-desc">The platform that automates your court document pipeline from inbox to network share.</p>
+    <p>PCP Nexus is a workstation-based automation system that processes court document notifications from Tyler Technologies. It monitors an Outlook inbox around the clock, downloads PDF documents from Tyler's servers, renames or merges them according to court rules, and delivers the finished files to a shared network folder.</p>
+    <h3>Core Capabilities</h3>
+    <table>
+      <thead><tr><th>Capability</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>24/7 Autonomy</strong></td><td>Operates continuously without human intervention once started.</td></tr>
+        <tr><td><strong>Legal Renaming</strong></td><td>Applies strict, court-compliant file naming rules automatically.</td></tr>
+        <tr><td><strong>PDF Aggregation</strong></td><td>Joins related filings into a single PDF for Phase 2 petitions.</td></tr>
+        <tr><td><strong>Deduplication</strong></td><td>Prevents duplicate filings from entering the pipeline. <span class="version-badge v44">v4.4</span></td></tr>
+        <tr><td><strong>Verified Handoff</strong></td><td>SHA-256 verified file transfers prevent data loss. <span class="version-badge v44">v4.4</span></td></tr>
+      </tbody>
+    </table>
+    <span class="section-anchor" id="architecture"></span>
+    <h3>System Architecture</h3>
+    <p>PCP Nexus uses four specialized software agents that work together in sequence:</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 740 220" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <defs>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/></marker>
+          <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+          <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+          <linearGradient id="grad3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#16a34a"/></linearGradient>
+          <linearGradient id="grad4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+        </defs>
+        <rect x="10" y="70" width="100" height="80" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="60" y="102" text-anchor="middle" font-size="22">&#128231;</text>
+        <text x="60" y="126" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">Outlook</text>
+        <text x="60" y="140" text-anchor="middle" font-size="9" fill="#94a3b8">Inbox</text>
+        <line x1="112" y1="110" x2="148" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="152" y="60" width="120" height="100" rx="12" fill="url(#grad1)" opacity="0.95"/>
+        <text x="212" y="95" text-anchor="middle" font-size="22" fill="white">&#128229;</text>
+        <text x="212" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="white">Intake</text>
+        <text x="212" y="134" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Scans &amp; downloads</text>
+        <text x="212" y="147" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Tyler emails</text>
+        <line x1="274" y1="110" x2="310" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="314" y="60" width="120" height="100" rx="12" fill="url(#grad2)" opacity="0.95"/>
+        <text x="374" y="95" text-anchor="middle" font-size="22" fill="white">&#128269;</text>
+        <text x="374" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="white">Auditor</text>
+        <text x="374" y="134" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Classifies, renames</text>
+        <text x="374" y="147" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">&amp; merges documents</text>
+        <line x1="436" y1="110" x2="472" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="476" y="60" width="120" height="100" rx="12" fill="url(#grad3)" opacity="0.95"/>
+        <text x="536" y="95" text-anchor="middle" font-size="22" fill="white">&#128193;</text>
+        <text x="536" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="white">Clerk</text>
+        <text x="536" y="134" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Delivers files to</text>
+        <text x="536" y="147" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">network share</text>
+        <line x1="598" y1="110" x2="624" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="628" y="70" width="100" height="80" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="678" y="102" text-anchor="middle" font-size="22">&#128451;</text>
+        <text x="678" y="126" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">Network</text>
+        <text x="678" y="140" text-anchor="middle" font-size="9" fill="#94a3b8">Share</text>
+        <rect x="314" y="180" width="120" height="36" rx="8" fill="url(#grad4)" opacity="0.9"/>
+        <text x="374" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="white">&#128202; Reporter</text>
+        <line x1="374" y1="160" x2="374" y2="178" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="395" y="175" font-size="9" fill="#94a3b8">logs &amp; CSV</text>
+      </svg>
+      <div class="diagram-label">Fig. 1 &#8212; PCP Nexus agent pipeline: Outlook &#8594; Intake &#8594; Auditor &#8594; Clerk &#8594; Network Share</div>
+    </div>
+    <span class="section-anchor" id="two-pipelines"></span>
+    <h3>The Two Pipelines</h3>
+    <p>All documents flow through one of two pipelines, depending on the filing type:</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+      <div style="background: var(--white); border: 2px solid var(--blue-200); border-radius: var(--radius-lg); padding: 24px;">
+        <span class="pipeline-badge phase1">&#9679; Phase 1</span>
+        <h4 style="margin-top: 12px;">Civil Process / eAffidavits</h4>
+        <p style="font-size: 14px; color: var(--gray-600); margin-bottom: 8px;">One email in &#8594; one renamed PDF out.</p>
+        <p style="font-size: 13px; color: var(--gray-500);">Each incoming email produces exactly one PDF that is renamed according to court document type codes (e.g., AX02 &#8594; AX42 for Return of Service).</p>
+      </div>
+      <div style="background: var(--white); border: 2px solid var(--green-200); border-radius: var(--radius-lg); padding: 24px;">
+        <span class="pipeline-badge phase2">&#9679; Phase 2</span>
+        <h4 style="margin-top: 12px;">E-Filing / Petitions</h4>
+        <p style="font-size: 14px; color: var(--gray-600); margin-bottom: 8px;">Multiple emails &#8594; one merged PDF.</p>
+        <p style="font-size: 13px; color: var(--gray-500);">Related filings are collected and merged into a single PDF. The Lead Document (AX40) always comes first, followed by exhibits, then attachments.</p>
+      </div>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <text x="20" y="30" font-size="13" font-weight="700" fill="#1d4ed8">PHASE 1 &#8212; Affidavits</text>
+        <rect x="20" y="42" width="680" height="90" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+        <rect x="40" y="62" width="130" height="50" rx="8" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="105" y="84" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Tyler Email</text>
+        <text x="105" y="100" text-anchor="middle" font-size="9" fill="#64748b">e.g., AX02 doc</text>
+        <line x1="172" y1="87" x2="230" y2="87" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="201" y="80" text-anchor="middle" font-size="9" fill="#64748b">rename</text>
+        <rect x="234" y="62" width="130" height="50" rx="8" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="299" y="84" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Renamed PDF</text>
+        <text x="299" y="100" text-anchor="middle" font-size="9" fill="#64748b">AX02 &#8594; AX42</text>
+        <line x1="366" y1="87" x2="424" y2="87" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="395" y="80" text-anchor="middle" font-size="9" fill="#64748b">deliver</text>
+        <rect x="428" y="62" width="130" height="50" rx="8" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="493" y="84" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Network Share</text>
+        <text x="493" y="100" text-anchor="middle" font-size="9" fill="#64748b">Final output</text>
+        <text x="20" y="165" font-size="13" font-weight="700" fill="#15803d">PHASE 2 &#8212; Petitions</text>
+        <rect x="20" y="177" width="680" height="120" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+        <rect x="40" y="197" width="100" height="40" rx="6" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="90" y="221" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">AX40 Lead</text>
+        <rect x="40" y="243" width="100" height="40" rx="6" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="90" y="267" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Exhibits</text>
+        <rect x="148" y="243" width="100" height="40" rx="6" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="198" y="267" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Attachments</text>
+        <line x1="142" y1="217" x2="290" y2="237" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <line x1="142" y1="263" x2="290" y2="247" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="250" y1="263" x2="290" y2="250" stroke="#22c55e" stroke-width="1.5"/>
+        <rect x="294" y="222" width="120" height="46" rx="8" fill="#16a34a"/>
+        <text x="354" y="242" text-anchor="middle" font-size="11" font-weight="700" fill="white">Merge PDFs</text>
+        <text x="354" y="258" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Lead &#8594; Exhibits &#8594; Att.</text>
+        <line x1="416" y1="245" x2="460" y2="245" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="464" y="222" width="120" height="46" rx="8" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="524" y="242" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">Merged PDF</text>
+        <text x="524" y="258" text-anchor="middle" font-size="9" fill="#64748b">Single output file</text>
+        <rect x="530" y="190" width="156" height="24" rx="4" fill="#fef2f2" stroke="#fecaca"/>
+        <text x="608" y="206" text-anchor="middle" font-size="10" fill="#dc2626">&#10005; AX69, AX81, CL excluded</text>
+      </svg>
+      <div class="diagram-label">Fig. 2 &#8212; Phase 1 (one-to-one) and Phase 2 (many-to-one merge) document pipelines</div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="requirements"></span>
+  <div class="section">
+    <h2><span class="section-number">04</span> System Requirements</h2>
+    <p class="section-desc">What you need before running PCP Nexus.</p>
+    <table>
+      <thead><tr><th>Requirement</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operating System</strong></td><td>Windows 10 or Windows 11</td></tr>
+        <tr><td><strong>Email Client</strong></td><td>Microsoft Outlook Classic &#8212; must be logged in and running as Administrator</td></tr>
+        <tr><td><strong>Network</strong></td><td>Access to shared network drives and Tyler Technologies download servers</td></tr>
+        <tr><td><strong>Storage</strong></td><td>All data stored at <code>C:\ProgramData\PCP-Automation\</code></td></tr>
+      </tbody>
+    </table>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Outlook Must Run as Administrator</strong>
+        <p>If Outlook is not running with elevated privileges, PCP Nexus may be unable to access the inbox. Right-click Outlook and select <strong>"Run as administrator"</strong> before launching PCP Nexus.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="main-window"></span>
+  <div class="section">
+    <h2><span class="section-number">05</span> The Main Window</h2>
+    <p class="section-desc">Your primary control panel for PCP Nexus.</p>
+    <p>The main window provides one-click access to all essential functions:</p>
+    <table>
+      <thead><tr><th>Control</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Start / Stop Engine</strong></td><td>Turns the automation pipeline on or off.</td></tr>
+        <tr><td><strong>Open Config</strong></td><td>Opens the configuration file. <span class="version-badge" style="background: var(--purple-100); color: var(--purple-600);">Admin</span></td></tr>
+        <tr><td><strong>Open Dashboard</strong></td><td>Launches the HTML dashboard report in your browser.</td></tr>
+        <tr><td><strong>Open Logs</strong></td><td>Opens the log directory for troubleshooting.</td></tr>
+      </tbody>
+    </table>
+    <h3>Status Lights</h3>
+    <p>Three status indicators show the real-time state of each pipeline agent:</p>
+    <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 20px; margin: 16px 0;">
+      <div class="status-row"><span class="status-dot green"></span> <strong>RUNNING</strong> &#8212; Agent is active and processing normally.</div>
+      <div class="status-row"><span class="status-dot amber"></span> <strong>POLLING</strong> &#8212; Agent is waiting for new items to process.</div>
+      <div class="status-row"><span class="status-dot red"></span> <strong>STOPPED</strong> &#8212; Agent is idle or has encountered an error.</div>
+    </div>
+    <p>During normal operations, you will see the lights cycle between <strong>POLLING</strong> and <strong>PROCESSING</strong> as emails arrive and are handled.</p>
+  </div>
+
+  <span class="section-anchor" id="console"></span>
+  <div class="section">
+    <h2><span class="section-number">06</span> Console Tab</h2>
+    <p class="section-desc">Real-time activity feed.</p>
+    <p>The Console tab displays a live, scrolling list of every action the system takes &#8212; scanning the inbox, downloading PDFs, renaming files, merging documents, and delivering to the network share. This is your first place to look when verifying the system is working correctly.</p>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>Tip</strong>
+        <p>You don't need to keep the Console tab visible for the system to operate. It runs in the background regardless of which tab you're viewing.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="settings"></span>
+  <div class="section">
+    <h2><span class="section-number">07</span> Settings</h2>
+    <p class="section-desc">Configuration reference for administrators.</p>
+    <div class="callout admin">
+      <div class="callout-icon">&#128274;</div>
+      <div class="callout-content">
+        <strong>Administrator Only</strong>
+        <p>The settings below should only be modified by system administrators. Incorrect settings can disrupt the entire document pipeline.</p>
+      </div>
+    </div>
+    <h3>Outlook Connection</h3>
+    <p>Select the target Outlook mailbox account. After changing the account, you <strong>must</strong> click <strong>Test Connection</strong> to repopulate all folder dropdowns.</p>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Always Test After Changes</strong>
+        <p>Clicking "Test Connection" is not optional &#8212; it's required. Without it, folder dropdowns may reference stale or incorrect mailbox paths.</p>
+      </div>
+    </div>
+    <h3>Phase 1 &amp; Phase 2 Folder Settings</h3>
+    <p>Each phase requires three Outlook folder mappings and one file system path:</p>
+    <table>
+      <thead><tr><th>Setting</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Inbox Folder</strong></td><td>Where PCP Nexus looks for new Tyler emails.</td></tr>
+        <tr><td><strong>Completed Folder</strong></td><td>Where processed emails are moved after successful handling.</td></tr>
+        <tr><td><strong>Exceptions Folder</strong></td><td>Where emails are routed when they require human review.</td></tr>
+        <tr><td><strong>Output Path</strong></td><td>The file system directory where finished PDFs are saved.</td></tr>
+      </tbody>
+    </table>
+    <h3>Global Options</h3>
+    <table>
+      <thead><tr><th>Option</th><th>Default</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Poll Interval</strong></td><td>5 minutes</td><td>How often the system checks for new emails. CSV handoff polling runs independently.</td></tr>
+        <tr><td><strong>Auto-Start Engine</strong></td><td>ON</td><td>Recommended for production. The engine starts automatically when the app opens.</td></tr>
+      </tbody>
+    </table>
+    <h3>CSV &amp; Scheduling <span class="version-badge v45">v4.5</span></h3>
+    <table>
+      <thead><tr><th>Setting</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>CSV Share Path</strong></td><td>Location of the in-progress CSV file during the day.</td></tr>
+        <tr><td><strong>CSV Archive Path</strong></td><td>Destination for the finished nightly CSV. <span class="version-badge v45">v4.5</span> Set this to the root PDF output folder.</td></tr>
+        <tr><td><strong>Rotation Time</strong></td><td>Phase 1: 9:45 PM &nbsp;|&nbsp; Phase 2: 10:00 PM</td></tr>
+      </tbody>
+    </table>
+    <div class="callout new">
+      <div class="callout-icon">&#127381;</div>
+      <div class="callout-content">
+        <strong>New in v4.5 &#8212; Simplified CSV Destination</strong>
+        <p>The CSV Archive Path should now point directly to the root output folder (where PDFs are delivered), completely bypassing the legacy <code>DONE</code> folder. This simplifies downstream automation access.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="daily-procedures"></span>
+  <div class="section">
+    <h2><span class="section-number">08</span> Daily Procedures</h2>
+    <p class="section-desc">What to check every day to keep the pipeline running smoothly.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 700 140" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <rect x="10" y="20" width="200" height="100" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+        <text x="110" y="48" text-anchor="middle" font-size="20">&#9728;&#65039;</text>
+        <text x="110" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">Morning</text>
+        <text x="110" y="86" text-anchor="middle" font-size="10" fill="#475569">Confirm engine is running</text>
+        <text x="110" y="100" text-anchor="middle" font-size="10" fill="#475569">Verify Dashboard updating</text>
+        <text x="110" y="114" text-anchor="middle" font-size="10" fill="#475569">Check last night's handover</text>
+        <rect x="250" y="20" width="200" height="100" rx="12" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+        <text x="350" y="48" text-anchor="middle" font-size="20">&#9788;&#65039;</text>
+        <text x="350" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706">Midday</text>
+        <text x="350" y="86" text-anchor="middle" font-size="10" fill="#475569">Review Manual Review Queue</text>
+        <text x="350" y="100" text-anchor="middle" font-size="10" fill="#475569">Check Exceptions folder</text>
+        <text x="350" y="114" text-anchor="middle" font-size="10" fill="#475569">Resolve flagged items</text>
+        <rect x="490" y="20" width="200" height="100" rx="12" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+        <text x="590" y="48" text-anchor="middle" font-size="20">&#127769;</text>
+        <text x="590" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">End of Day</text>
+        <text x="590" y="86" text-anchor="middle" font-size="10" fill="#475569">Keep workstation ON</text>
+        <text x="590" y="100" text-anchor="middle" font-size="10" fill="#475569">past 10:15 PM for handover</text>
+        <text x="590" y="114" text-anchor="middle" font-size="10" fill="#475569">App closes itself after</text>
+      </svg>
+      <div class="diagram-label">Fig. 3 &#8212; Daily operator rhythm: morning verification, midday review, end-of-day handover</div>
+    </div>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Do Not Shut Down Before 10:15 PM</strong>
+        <p>The automated nightly handover runs at 9:45 PM (Phase 1) and 10:00 PM (Phase 2). If the workstation is powered off before these times, the handover will not complete and data may be delayed until the next cycle.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="phase1-workflow"></span>
+  <div class="section">
+    <h2><span class="section-number">09</span> Phase 1 Workflow: Affidavits</h2>
+    <p class="section-desc"><span class="pipeline-badge phase1">&#9679; Phase 1</span> &nbsp;One email in, one renamed PDF out.</p>
+    <p>Each Tyler notification email for a civil process document is handled individually. The system downloads the PDF, applies the appropriate document-type rename code, and delivers the file to the network share.</p>
+    <h3>Document Rename Map</h3>
+    <p>Phase 1 applies court-compliant rename codes automatically:</p>
+    <table>
+      <thead><tr><th>Source Code</th><th>Output Code</th><th>Document Type</th></tr></thead>
+      <tbody>
+        <tr><td><code>AX02</code></td><td><code>AX42</code></td><td>Return of Service</td></tr>
+        <tr><td><code>AX07</code></td><td><code>AX47</code></td><td>Attorney Motion</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 13px; color: var(--gray-500);">Additional rename mappings follow the same pattern. Case numbers are extracted exactly as displayed in the source email.</p>
+  </div>
+
+  <span class="section-anchor" id="phase2-workflow"></span>
+  <div class="section">
+    <h2><span class="section-number">10</span> Phase 2 Workflow: Petitions</h2>
+    <p class="section-desc"><span class="pipeline-badge phase2">&#9679; Phase 2</span> &nbsp;Multiple documents merge into one PDF.</p>
+    <p>Petition filings arrive as multiple separate emails. PCP Nexus collects all related documents and merges them into a single PDF in a strict order.</p>
+    <h3>Merge Order</h3>
+    <ol class="steps">
+      <li><div class="step-content"><strong>AX40 &#8212; Lead Document</strong><br>Always placed first in the merged PDF. Nothing merges until the Lead Document arrives.</div></li>
+      <li><div class="step-content"><strong>Exhibits</strong><br>Placed in the middle of the merged document, in the order received.</div></li>
+      <li><div class="step-content"><strong>Attachments</strong><br>Placed at the end of the merged PDF.</div></li>
+    </ol>
+    <h3>Excluded Document Types</h3>
+    <p>The following are automatically filtered out and will <strong>not</strong> appear in the merged PDF:</p>
+    <table>
+      <thead><tr><th>Code</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td><code>AX69</code></td><td>Excluded by court rules</td></tr>
+        <tr><td><code>AX81</code></td><td>Excluded by court rules</td></tr>
+        <tr><td><code>CL</code> + digits</td><td>Clerk Letters &#8212; excluded from merge <span class="version-badge v44">v4.4</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout new">
+      <div class="callout-icon">&#127381;</div>
+      <div class="callout-content">
+        <strong>v4.4 Fix &#8212; Clerk Letter Detection</strong>
+        <p>Filenames containing "CL" followed by digits (e.g., <code>AX40...CL2.pdf</code>) are now correctly identified as Clerk Letters and excluded from the merge. Earlier versions could miss this pattern.</p>
+      </div>
+    </div>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>Wait State</strong>
+        <p>If exhibits or attachments arrive before the Lead Document (AX40), they are held in a queue. Merging only begins once the Lead Document is present.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="dashboard"></span>
+  <div class="section">
+    <h2><span class="section-number">11</span> Dashboard &amp; Reporting</h2>
+    <p class="section-desc">Your at-a-glance view of pipeline health and flagged items.</p>
+    <p>The Dashboard is a read-only HTML report generated automatically on your local machine. Open it from the main window using the <strong>Open Dashboard</strong> button.</p>
+    <h3>Key Sections</h3>
+    <table>
+      <thead><tr><th>Section</th><th>What It Shows</th><th>Action Required</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Manual Review Queue</strong></td><td>Items needing human attention: OCR failures, missing lead documents, keyword-flagged items.</td><td>Click <strong>Resolve</strong> after reviewing each item.</td></tr>
+        <tr><td><strong>Comments &amp; Follow-up</strong></td><td>Full comment text from keyword-flagged documents.</td><td>Review for legal significance and take appropriate action.</td></tr>
+        <tr><td><strong>Recent Filings</strong></td><td>Chronological log of all documents processed and delivered.</td><td>Use for spot-checks and audit trail verification.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <span class="section-anchor" id="deduplication"></span>
+  <div class="section">
+    <h2><span class="section-number">12</span> Lead Document Deduplication <span class="version-badge v44">v4.4</span></h2>
+    <p class="section-desc">How PCP Nexus prevents duplicate petition filings.</p>
+    <p>When a petition is amended and filed more than once, the system automatically compares the <strong>Date Submitted</strong> values. Only the newest submission is kept &#8212; the older version is discarded. This ensures only one row per unique lead document appears in the CSV and only the most current filing enters the merged PDF.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 600 150" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <rect x="10" y="30" width="160" height="55" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+        <text x="90" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">AX40 &#8212; Filed Mar 1</text>
+        <text x="90" y="72" text-anchor="middle" font-size="10" fill="#94a3b8">Older submission</text>
+        <rect x="10" y="95" width="160" height="55" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+        <text x="90" y="120" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">AX40 &#8212; Filed Mar 5</text>
+        <text x="90" y="137" text-anchor="middle" font-size="10" fill="#94a3b8">Newer submission</text>
+        <line x1="172" y1="57" x2="240" y2="90" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="260" y="68" font-size="22" fill="#dc2626">&#10005;</text>
+        <line x1="172" y1="122" x2="310" y2="122" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="320" y="97" width="160" height="55" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <text x="400" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">&#10003; Kept</text>
+        <text x="400" y="137" text-anchor="middle" font-size="10" fill="#94a3b8">Newest version wins</text>
+      </svg>
+      <div class="diagram-label">Fig. 4 &#8212; Deduplication: when duplicate lead documents arrive, only the newest is retained</div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="csv-handoff"></span>
+  <div class="section">
+    <h2><span class="section-number">13</span> Safe CSV Handoff <span class="version-badge v45">v4.5</span></h2>
+    <p class="section-desc">How your daily CSV report is securely transferred every night.</p>
+    <p>Each night, PCP Nexus transfers the day's in-progress CSV to its final archive destination using a verified, four-step process:</p>
+    <ol class="steps">
+      <li><div class="step-content"><strong>Copy</strong><br>The in-progress CSV is copied to the archive destination. <span class="version-badge v45">v4.5</span> This destination is now the root PDF output folder, bypassing the legacy <code>DONE</code> folder.</div></li>
+      <li><div class="step-content"><strong>Verify</strong><br>A SHA-256 hash confirms the copy is <strong>completely identical</strong> to the source file. If the hashes don't match, the handoff is aborted and retried.</div></li>
+      <li><div class="step-content"><strong>Delete</strong><br>The in-progress copy is deleted <strong>only</strong> after verification passes.</div></li>
+      <li><div class="step-content"><strong>Roll Forward</strong><br>A blank CSV with tomorrow's date is created, ensuring late-arriving emails don't mix with today's completed data.</div></li>
+    </ol>
+    <div class="callout new">
+      <div class="callout-icon">&#127381;</div>
+      <div class="callout-content">
+        <strong>New in v4.5 &#8212; Independent Handoff Polling</strong>
+        <p>The CSV handoff routine now runs on its own 5-minute polling cycle, completely independent of the main engine state. This means the handoff will execute on schedule <strong>even if the engine is stopped or idle</strong>.</p>
+      </div>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 660 120" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <rect x="10" y="30" width="120" height="60" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+        <text x="70" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">In-Progress</text>
+        <text x="70" y="73" text-anchor="middle" font-size="10" fill="#64748b">CSV</text>
+        <line x1="132" y1="60" x2="165" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="148" y="52" text-anchor="middle" font-size="8" fill="#94a3b8">copy</text>
+        <rect x="170" y="30" width="100" height="60" rx="8" fill="#fefce8" stroke="#fde68a"/>
+        <text x="220" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#a16207">SHA-256</text>
+        <text x="220" y="73" text-anchor="middle" font-size="10" fill="#64748b">Verify</text>
+        <line x1="272" y1="60" x2="305" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="288" y="52" text-anchor="middle" font-size="8" fill="#94a3b8">match?</text>
+        <rect x="310" y="30" width="100" height="60" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+        <text x="360" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">Delete</text>
+        <text x="360" y="73" text-anchor="middle" font-size="10" fill="#64748b">Source</text>
+        <line x1="412" y1="60" x2="445" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="450" y="30" width="100" height="60" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+        <text x="500" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">Roll</text>
+        <text x="500" y="73" text-anchor="middle" font-size="10" fill="#64748b">Forward</text>
+        <line x1="552" y1="60" x2="585" y2="60" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="590" y="30" width="60" height="60" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <text x="620" y="57" text-anchor="middle" font-size="16">&#10003;</text>
+        <text x="620" y="76" text-anchor="middle" font-size="9" fill="#16a34a">Done</text>
+      </svg>
+      <div class="diagram-label">Fig. 5 &#8212; Safe CSV handoff: copy &#8594; verify &#8594; delete &#8594; roll forward</div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="backfill"></span>
+  <div class="section">
+    <h2><span class="section-number">14</span> Hourly CSV-to-Database Backfill <span class="version-badge v44">v4.4</span></h2>
+    <p class="section-desc">Automatic gap prevention for the internal database.</p>
+    <p>Every 60 minutes, PCP Nexus parses the current in-progress CSV and inserts any missing records into the internal SQLite database. This prevents tracking gaps that could occur if the application crashed mid-cycle or was restarted unexpectedly.</p>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>This Runs Automatically</strong>
+        <p>No operator action is required. The backfill process is silent and runs in the background. You can verify it's working by checking the database record counts against the CSV row counts during weekly spot-checks.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="keywords"></span>
+  <div class="section">
+    <h2><span class="section-number">15</span> Keyword Monitoring &amp; Exceptions</h2>
+    <p class="section-desc">How the system flags documents that need human review.</p>
+    <p>PCP Nexus scans the <strong>Accepted Comments</strong> field of each email for specific legal keywords. When a match is found, the document processes normally but is also flagged for manual review.</p>
+    <h3>What Happens When a Keyword Is Detected</h3>
+    <ol class="steps">
+      <li><div class="step-content"><strong>Document Processes Normally</strong><br>The PDF is renamed/merged and delivered as usual &#8212; processing is not blocked.</div></li>
+      <li><div class="step-content"><strong>Email Routes to Exceptions</strong><br>The source email is moved to the Exceptions folder for visibility.</div></li>
+      <li><div class="step-content"><strong>Dashboard Alert Appears</strong><br>A red alert indicator appears on the Dashboard in the Manual Review Queue.</div></li>
+    </ol>
+    <h3>Monitored Keywords</h3>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0;">
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">deny</code>
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">fee</code>
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">dismissed</code>
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">dwop</code>
+    </div>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Always Review Keyword Hits</strong>
+        <p>These keywords may indicate legally significant changes (denied filings, dismissed cases, fee requirements). Review the full comment text in the Dashboard's "Comments &amp; Follow-up" section before clearing the alert.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="troubleshooting"></span>
+  <div class="section">
+    <h2><span class="section-number">16</span> Troubleshooting</h2>
+    <p class="section-desc">Common issues and how to resolve them.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <text x="350" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Troubleshooting Decision Tree</text>
+        <rect x="260" y="35" width="180" height="40" rx="20" fill="#3b82f6"/>
+        <text x="350" y="60" text-anchor="middle" font-size="12" font-weight="600" fill="white">Something seems wrong</text>
+        <line x1="350" y1="75" x2="350" y2="95" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="260" y="95" width="180" height="36" rx="6" fill="#fef3c7" stroke="#fbbf24"/>
+        <text x="350" y="118" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">Is the engine running?</text>
+        <line x1="260" y1="113" x2="120" y2="113" stroke="#64748b" stroke-width="1"/>
+        <line x1="120" y1="113" x2="120" y2="145" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
+        <text x="190" y="108" font-size="10" fill="#dc2626" font-weight="600">NO</text>
+        <rect x="30" y="148" width="180" height="50" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+        <text x="120" y="170" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Click Start Engine</text>
+        <text x="120" y="186" text-anchor="middle" font-size="9" fill="#64748b">Check status bar turns green</text>
+        <line x1="440" y1="113" x2="510" y2="113" stroke="#64748b" stroke-width="1"/>
+        <line x1="510" y1="113" x2="510" y2="145" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
+        <text x="465" y="108" font-size="10" fill="#22c55e" font-weight="600">YES</text>
+        <rect x="420" y="148" width="180" height="36" rx="6" fill="#fef3c7" stroke="#fbbf24"/>
+        <text x="510" y="171" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">Is it stalled (&gt;2 min)?</text>
+        <line x1="600" y1="166" x2="640" y2="166" stroke="#64748b" stroke-width="1"/>
+        <rect x="644" y="148" width="110" height="36" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+        <text x="699" y="171" text-anchor="middle" font-size="10" font-weight="600" fill="#22c55e">NO &#8594; Wait</text>
+        <line x1="510" y1="184" x2="510" y2="210" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
+        <text x="522" y="200" font-size="10" fill="#dc2626" font-weight="600">YES</text>
+        <rect x="420" y="213" width="180" height="50" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+        <text x="510" y="235" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">Restart the application</text>
+        <text x="510" y="251" text-anchor="middle" font-size="9" fill="#64748b">If persists &#8594; contact Admin</text>
+      </svg>
+      <div class="diagram-label">Fig. 6 &#8212; Troubleshooting decision tree for common issues</div>
+    </div>
+    <table>
+      <thead><tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Engine appears stalled</strong></td><td>Temporary processing delay or resource lock</td><td>Wait 2 minutes. If no recovery, restart the application.</td></tr>
+        <tr><td><strong>Nightly handover did not complete</strong></td><td>Workstation was powered off before 10:15 PM, or network share was unavailable</td><td>Verify the PC was on at 9:45 PM. Check network share connection. The handoff will retry on the next 5-minute cycle.</td></tr>
+        <tr><td><strong>Missing emails / no documents processing</strong></td><td>Folder configuration mismatch in Outlook settings</td><td>Contact your Administrator to verify Outlook folder mappings.</td></tr>
+        <tr><td><strong>Red alert on Dashboard</strong></td><td>Keyword detected in email comments</td><td>Review the flagged item in the Dashboard. Clear using the "Resolve" button after taking appropriate action.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <span class="section-anchor" id="checklists"></span>
+  <div class="section">
+    <h2><span class="section-number">17</span> Operational Checklists</h2>
+    <p class="section-desc">Printable reference checklists for daily and weekly operations.</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="checklist">
+        <h4>&#9728;&#65039; Daily Checklist</h4>
+        <ul>
+          <li>Confirm engine status is <strong>Running</strong> (green)</li>
+          <li>Verify Dashboard is updating with new filings</li>
+          <li>Review the Exceptions folder for flagged items</li>
+          <li>Check Manual Review Queue on Dashboard</li>
+          <li>Resolve any keyword-flagged alerts</li>
+          <li>Verify previous night's handover completed</li>
+          <li>Leave workstation ON past 10:15 PM</li>
+        </ul>
+      </div>
+      <div class="checklist">
+        <h4>&#128197; Weekly Checklist</h4>
+        <ul>
+          <li>Spot-check CSV accuracy against delivered PDFs</li>
+          <li>Verify network share paths are accessible</li>
+          <li>Review database record counts vs. CSV rows</li>
+          <li>Check log files for recurring warnings</li>
+          <li>Confirm Outlook mailbox connection is stable</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="revision-history"></span>
+  <div class="section">
+    <h2><span class="section-number">18</span> Revision History</h2>
+    <p class="section-desc">Change log for PCP Nexus and this manual.</p>
+    <table>
+      <thead><tr><th>Version</th><th>Date</th><th>Summary</th></tr></thead>
+      <tbody>
+        <tr><td><span class="version-badge v45">v4.5</span></td><td>March 18, 2026</td><td>CSV handoff now delivers directly to root output folders (bypassing legacy DONE folders). Independent 5-minute CSV handoff polling decoupled from main engine state.</td></tr>
+        <tr><td><span class="version-badge v44">v4.4</span></td><td>March 8, 2026</td><td>Lead Document deduplication, Clerk Letter filter fix (CL + digits), hourly CSV-to-database backfill, comment keyword monitoring, and safe CSV handoff protocol.</td></tr>
+        <tr><td><strong style="color: var(--gray-500);">v4.3</strong></td><td>March 4, 2026</td><td>Full user manual; expanded requirements, SOPs, workflows, dashboard, recovery behavior, and operational checklists.</td></tr>
+        <tr><td><strong style="color: var(--gray-500);">v4.2</strong></td><td>Feb 10, 2026</td><td>Tyler multi-document download improvements and Phase 2 output naming updates.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p><strong>PCP Nexus</strong> &#8212; Professional Civil Process of Texas, Inc.</p>
+    <p>Version 4.5 &#8226; March 2026 &#8226; Mission-Critical Document Automation</p>
+    <p style="margin-top: 8px;">Questions? Contact your system administrator.</p>
+  </div>
+
+</div>
+</main>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-overlay').classList.toggle('open');
+  }
+  var sections = document.querySelectorAll('.section-anchor');
+  var navLinks = document.querySelectorAll('.nav-link');
+  function updateActiveNav() {
+    var current = '';
+    sections.forEach(function(section) {
+      var rect = section.getBoundingClientRect();
+      if (rect.top <= 120) { current = section.id; }
+    });
+    navLinks.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) { link.classList.add('active'); }
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.querySelector('.sidebar-overlay').classList.remove('open');
+      }
+    });
+  });
+</script>
+</body>
+</html>
