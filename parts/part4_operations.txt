@@ -1,0 +1,113 @@
+
+  <span class="section-anchor" id="daily-procedures"></span>
+  <div class="section">
+    <h2><span class="section-number">08</span> Daily Procedures</h2>
+    <p class="section-desc">What to check every day to keep the pipeline running smoothly.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 700 140" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <rect x="10" y="20" width="200" height="100" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+        <text x="110" y="48" text-anchor="middle" font-size="20">&#9728;&#65039;</text>
+        <text x="110" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">Morning</text>
+        <text x="110" y="86" text-anchor="middle" font-size="10" fill="#475569">Confirm engine is running</text>
+        <text x="110" y="100" text-anchor="middle" font-size="10" fill="#475569">Verify Dashboard updating</text>
+        <text x="110" y="114" text-anchor="middle" font-size="10" fill="#475569">Check last night's handover</text>
+        <rect x="250" y="20" width="200" height="100" rx="12" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+        <text x="350" y="48" text-anchor="middle" font-size="20">&#9788;&#65039;</text>
+        <text x="350" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706">Midday</text>
+        <text x="350" y="86" text-anchor="middle" font-size="10" fill="#475569">Review Manual Review Queue</text>
+        <text x="350" y="100" text-anchor="middle" font-size="10" fill="#475569">Check Exceptions folder</text>
+        <text x="350" y="114" text-anchor="middle" font-size="10" fill="#475569">Resolve flagged items</text>
+        <rect x="490" y="20" width="200" height="100" rx="12" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+        <text x="590" y="48" text-anchor="middle" font-size="20">&#127769;</text>
+        <text x="590" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">End of Day</text>
+        <text x="590" y="86" text-anchor="middle" font-size="10" fill="#475569">Keep workstation ON</text>
+        <text x="590" y="100" text-anchor="middle" font-size="10" fill="#475569">past 10:15 PM for handover</text>
+        <text x="590" y="114" text-anchor="middle" font-size="10" fill="#475569">App closes itself after</text>
+      </svg>
+      <div class="diagram-label">Fig. 3 &#8212; Daily operator rhythm: morning verification, midday review, end-of-day handover</div>
+    </div>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Do Not Shut Down Before 10:15 PM</strong>
+        <p>The automated nightly handover runs at 9:45 PM (Phase 1) and 10:00 PM (Phase 2). If the workstation is powered off before these times, the handover will not complete and data may be delayed until the next cycle.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="phase1-workflow"></span>
+  <div class="section">
+    <h2><span class="section-number">09</span> Phase 1 Workflow: Affidavits</h2>
+    <p class="section-desc"><span class="pipeline-badge phase1">&#9679; Phase 1</span> &nbsp;One email in, one renamed PDF out.</p>
+    <p>Each Tyler notification email for a civil process document is handled individually. The system downloads the PDF, applies the appropriate document-type rename code, and delivers the file to the network share.</p>
+    <h3>Document Rename Map</h3>
+    <p>Phase 1 applies court-compliant rename codes automatically:</p>
+    <table>
+      <thead><tr><th>Source Code</th><th>Output Code</th><th>Document Type</th></tr></thead>
+      <tbody>
+        <tr><td><code>AX02</code></td><td><code>AX42</code></td><td>Return of Service</td></tr>
+        <tr><td><code>AX07</code></td><td><code>AX47</code></td><td>Attorney Motion</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 13px; color: var(--gray-500);">Additional rename mappings follow the same pattern. Case numbers are extracted exactly as displayed in the source email.</p>
+  </div>
+
+  <span class="section-anchor" id="phase2-workflow"></span>
+  <div class="section">
+    <h2><span class="section-number">10</span> Phase 2 Workflow: Petitions</h2>
+    <p class="section-desc"><span class="pipeline-badge phase2">&#9679; Phase 2</span> &nbsp;Multiple documents merge into one PDF.</p>
+    <p>Petition filings arrive as multiple separate emails. PCP Nexus collects all related documents and merges them into a single PDF in a strict order.</p>
+    <h3>Merge Order</h3>
+    <ol class="steps">
+      <li><div class="step-content"><strong>AX40 &#8212; Lead Document</strong><br>Always placed first in the merged PDF. Nothing merges until the Lead Document arrives.</div></li>
+      <li><div class="step-content"><strong>Exhibits</strong><br>Placed in the middle of the merged document, in the order received.</div></li>
+      <li><div class="step-content"><strong>Attachments</strong><br>Placed at the end of the merged PDF.</div></li>
+    </ol>
+    <h3>Excluded Document Types</h3>
+    <p>The following are automatically filtered out and will <strong>not</strong> appear in the merged PDF:</p>
+    <table>
+      <thead><tr><th>Code</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td><code>AX69</code></td><td>Excluded by court rules</td></tr>
+        <tr><td><code>AX81</code></td><td>Excluded by court rules</td></tr>
+        <tr><td><code>CL</code> + digits</td><td>Clerk Letters &#8212; excluded from merge <span class="version-badge v44">v4.4</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout new">
+      <div class="callout-icon">&#127381;</div>
+      <div class="callout-content">
+        <strong>v4.4 Fix &#8212; Clerk Letter Detection</strong>
+        <p>Filenames containing "CL" followed by digits (e.g., <code>AX40...CL2.pdf</code>) are now correctly identified as Clerk Letters and excluded from the merge. Earlier versions could miss this pattern.</p>
+      </div>
+    </div>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>Wait State</strong>
+        <p>If exhibits or attachments arrive before the Lead Document (AX40), they are held in a queue. Merging only begins once the Lead Document is present.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="dashboard"></span>
+  <div class="section">
+    <h2><span class="section-number">11</span> Dashboard &amp; Reporting</h2>
+    <p class="section-desc">Your at-a-glance view of pipeline health and flagged items.</p>
+    <p>The Dashboard is a read-only HTML report generated automatically on your local machine. Open it from the main window using the <strong>Open Dashboard</strong> button.</p>
+    <h3>Key Sections</h3>
+    <table>
+      <thead><tr><th>Section</th><th>What It Shows</th><th>Action Required</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Manual Review Queue</strong></td><td>Items needing human attention: OCR failures, missing lead documents, keyword-flagged items. <span class="version-badge v45" style="background: var(--blue-100); color: var(--blue-700);">No Date Filter</span></td><td>Click <strong>Resolve</strong> after reviewing each item. Unresolved items remain visible across days.</td></tr>
+        <tr><td><strong>Comments &amp; Follow-up</strong></td><td>Full comment text from keyword-flagged documents.</td><td>Review for legal significance and take appropriate action.</td></tr>
+        <tr><td><strong>Recent Filings</strong></td><td>Chronological log of documents processed and delivered <strong>today</strong> (since midnight). <span class="version-badge v45" style="background: var(--green-100); color: var(--green-700);">Start-of-Day Reset</span></td><td>Use for same-day spot-checks and activity verification.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout tip">
+      <div class="callout-icon">&#128337;</div>
+      <div class="callout-content">
+        <strong>Automatic Midnight Reset</strong>
+        <p>All Dashboard scorecards and the "Recent Filings" table reset to zero at exactly midnight. The activity log header has been renamed to <strong>"Today's Activity Log"</strong> to reflect this calendar-day behavior.</p>
+      </div>
+    </div>
+  </div>

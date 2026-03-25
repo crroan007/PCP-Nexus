@@ -1,0 +1,117 @@
+
+  <span class="section-anchor" id="requirements"></span>
+  <div class="section">
+    <h2><span class="section-number">04</span> System Requirements</h2>
+    <p class="section-desc">What you need before running PCP Nexus.</p>
+    <table>
+      <thead><tr><th>Requirement</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Operating System</strong></td><td>Windows 10 or Windows 11</td></tr>
+        <tr><td><strong>Email Client</strong></td><td>Microsoft Outlook Classic &#8212; must be logged in and running as Administrator</td></tr>
+        <tr><td><strong>Network</strong></td><td>Access to shared network drives and Tyler Technologies download servers</td></tr>
+        <tr><td><strong>Storage</strong></td><td>All data stored at <code>C:\ProgramData\PCP-Automation\</code></td></tr>
+      </tbody>
+    </table>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Outlook Must Run as Administrator</strong>
+        <p>If Outlook is not running with elevated privileges, PCP Nexus may be unable to access the inbox. Right-click Outlook and select <strong>"Run as administrator"</strong> before launching PCP Nexus.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="main-window"></span>
+  <div class="section">
+    <h2><span class="section-number">05</span> The Main Window</h2>
+    <p class="section-desc">Your primary control panel for PCP Nexus.</p>
+    <p>The main window provides one-click access to all essential functions:</p>
+    <table>
+      <thead><tr><th>Control</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Start / Stop Engine</strong></td><td>Turns the automation pipeline on or off.</td></tr>
+        <tr><td><strong>Open Config</strong></td><td>Opens the configuration file. <span class="version-badge" style="background: var(--purple-100); color: var(--purple-600);">Admin</span></td></tr>
+        <tr><td><strong>Open Dashboard</strong></td><td>Launches the HTML dashboard report in your browser.</td></tr>
+        <tr><td><strong>Open Logs</strong></td><td>Opens the log directory for troubleshooting.</td></tr>
+      </tbody>
+    </table>
+    <h3>Status Lights</h3>
+    <p>Three status indicators show the real-time state of each pipeline agent:</p>
+    <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 20px; margin: 16px 0;">
+      <div class="status-row"><span class="status-dot green"></span> <strong>RUNNING</strong> &#8212; Agent is active and processing normally.</div>
+      <div class="status-row"><span class="status-dot amber"></span> <strong>POLLING</strong> &#8212; Agent is waiting for new items to process.</div>
+      <div class="status-row"><span class="status-dot red"></span> <strong>STOPPED</strong> &#8212; Agent is idle or has encountered an error.</div>
+    </div>
+    <p>During normal operations, you will see the lights cycle between <strong>POLLING</strong> and <strong>PROCESSING</strong> as emails arrive and are handled.</p>
+  </div>
+
+  <span class="section-anchor" id="console"></span>
+  <div class="section">
+    <h2><span class="section-number">06</span> Console Tab</h2>
+    <p class="section-desc">Real-time activity feed.</p>
+    <p>The Console tab displays a live, scrolling list of every action the system takes &#8212; scanning the inbox, downloading PDFs, renaming files, merging documents, and delivering to the network share. This is your first place to look when verifying the system is working correctly.</p>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>Tip</strong>
+        <p>You don't need to keep the Console tab visible for the system to operate. It runs in the background regardless of which tab you're viewing.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="settings"></span>
+  <div class="section">
+    <h2><span class="section-number">07</span> Settings</h2>
+    <p class="section-desc">Configuration reference for administrators.</p>
+    <div class="callout admin">
+      <div class="callout-icon">&#128274;</div>
+      <div class="callout-content">
+        <strong>Administrator Only</strong>
+        <p>The settings below should only be modified by system administrators. Incorrect settings can disrupt the entire document pipeline.</p>
+      </div>
+    </div>
+    <h3>Outlook Connection</h3>
+    <p>Select the target Outlook mailbox account. After changing the account, you <strong>must</strong> click <strong>Test Connection</strong> to repopulate all folder dropdowns.</p>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Always Test After Changes</strong>
+        <p>Clicking "Test Connection" is not optional &#8212; it's required. Without it, folder dropdowns may reference stale or incorrect mailbox paths.</p>
+      </div>
+    </div>
+    <h3>Phase 1 &amp; Phase 2 Folder Settings</h3>
+    <p>Each phase requires three Outlook folder mappings and one file system path:</p>
+    <table>
+      <thead><tr><th>Setting</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Inbox Folder</strong></td><td>Where PCP Nexus looks for new Tyler emails.</td></tr>
+        <tr><td><strong>Completed Folder</strong></td><td>Where processed emails are moved after successful handling.</td></tr>
+        <tr><td><strong>Exceptions Folder</strong></td><td>Where emails are routed when they require human review.</td></tr>
+        <tr><td><strong>Output Path</strong></td><td>The file system directory where finished PDFs are saved.</td></tr>
+      </tbody>
+    </table>
+    <h3>Global Options</h3>
+    <table>
+      <thead><tr><th>Option</th><th>Default</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Poll Interval</strong></td><td>5 minutes</td><td>How often the system checks for new emails. CSV handoff polling runs independently.</td></tr>
+        <tr><td><strong>Auto-Start Engine</strong></td><td>ON</td><td>Recommended for production. The engine starts automatically when the app opens.</td></tr>
+      </tbody>
+    </table>
+    <h3>CSV &amp; Scheduling <span class="version-badge v45">v4.5</span></h3>
+    <table>
+      <thead><tr><th>Setting</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>CSV Share Path</strong></td><td>Location of the in-progress CSV file during the day.</td></tr>
+        <tr><td><strong>CSV Archive Path</strong></td><td>Destination for the finished nightly CSV. <span class="version-badge v45">v4.5</span> Set this to the root PDF output folder.</td></tr>
+        <tr><td><strong>Rotation Time</strong></td><td>Phase 1: 9:45 PM &nbsp;|&nbsp; Phase 2: 10:00 PM</td></tr>
+      </tbody>
+    </table>
+    <div class="callout new">
+      <div class="callout-icon">&#127381;</div>
+      <div class="callout-content">
+        <strong>New in v4.5 &#8212; Simplified CSV Destination</strong>
+        <p>The CSV Archive Path should now point directly to the root output folder (where PDFs are delivered), completely bypassing the legacy <code>DONE</code> folder. This simplifies downstream automation access.</p>
+      </div>
+    </div>
+  </div>

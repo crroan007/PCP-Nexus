@@ -1,0 +1,121 @@
+
+  <span class="section-anchor" id="what-is-nexus"></span>
+  <div class="section">
+    <h2><span class="section-number">03</span> What Is PCP Nexus?</h2>
+    <p class="section-desc">The platform that automates your court document pipeline from inbox to network share.</p>
+    <p>PCP Nexus is a workstation-based automation system that processes court document notifications from Tyler Technologies. It monitors an Outlook inbox around the clock, downloads PDF documents from Tyler's servers, renames or merges them according to court rules, and delivers the finished files to a shared network folder.</p>
+    <h3>Core Capabilities</h3>
+    <table>
+      <thead><tr><th>Capability</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>24/7 Autonomy</strong></td><td>Operates continuously without human intervention once started.</td></tr>
+        <tr><td><strong>Legal Renaming</strong></td><td>Applies strict, court-compliant file naming rules automatically.</td></tr>
+        <tr><td><strong>PDF Aggregation</strong></td><td>Joins related filings into a single PDF for Phase 2 petitions.</td></tr>
+        <tr><td><strong>Deduplication</strong></td><td>Prevents duplicate filings from entering the pipeline. <span class="version-badge v44">v4.4</span></td></tr>
+        <tr><td><strong>Verified Handoff</strong></td><td>SHA-256 verified file transfers prevent data loss. <span class="version-badge v44">v4.4</span></td></tr>
+      </tbody>
+    </table>
+    <span class="section-anchor" id="architecture"></span>
+    <h3>System Architecture</h3>
+    <p>PCP Nexus uses four specialized software agents that work together in sequence:</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 740 220" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <defs>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/></marker>
+          <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+          <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+          <linearGradient id="grad3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#16a34a"/></linearGradient>
+          <linearGradient id="grad4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+        </defs>
+        <rect x="10" y="70" width="100" height="80" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="60" y="102" text-anchor="middle" font-size="22">&#128231;</text>
+        <text x="60" y="126" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">Outlook</text>
+        <text x="60" y="140" text-anchor="middle" font-size="9" fill="#94a3b8">Inbox</text>
+        <line x1="112" y1="110" x2="148" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="152" y="60" width="120" height="100" rx="12" fill="url(#grad1)" opacity="0.95"/>
+        <text x="212" y="95" text-anchor="middle" font-size="22" fill="white">&#128229;</text>
+        <text x="212" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="white">Intake</text>
+        <text x="212" y="134" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Scans &amp; downloads</text>
+        <text x="212" y="147" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Tyler emails</text>
+        <line x1="274" y1="110" x2="310" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="314" y="60" width="120" height="100" rx="12" fill="url(#grad2)" opacity="0.95"/>
+        <text x="374" y="95" text-anchor="middle" font-size="22" fill="white">&#128269;</text>
+        <text x="374" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="white">Auditor</text>
+        <text x="374" y="134" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Classifies, renames</text>
+        <text x="374" y="147" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">&amp; merges documents</text>
+        <line x1="436" y1="110" x2="472" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="476" y="60" width="120" height="100" rx="12" fill="url(#grad3)" opacity="0.95"/>
+        <text x="536" y="95" text-anchor="middle" font-size="22" fill="white">&#128193;</text>
+        <text x="536" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="white">Clerk</text>
+        <text x="536" y="134" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Delivers files to</text>
+        <text x="536" y="147" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">network share</text>
+        <line x1="598" y1="110" x2="624" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="628" y="70" width="100" height="80" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="678" y="102" text-anchor="middle" font-size="22">&#128451;</text>
+        <text x="678" y="126" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">Network</text>
+        <text x="678" y="140" text-anchor="middle" font-size="9" fill="#94a3b8">Share</text>
+        <rect x="314" y="180" width="120" height="36" rx="8" fill="url(#grad4)" opacity="0.9"/>
+        <text x="374" y="203" text-anchor="middle" font-size="11" font-weight="700" fill="white">&#128202; Reporter</text>
+        <line x1="374" y1="160" x2="374" y2="178" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="395" y="175" font-size="9" fill="#94a3b8">logs &amp; CSV</text>
+      </svg>
+      <div class="diagram-label">Fig. 1 &#8212; PCP Nexus agent pipeline: Outlook &#8594; Intake &#8594; Auditor &#8594; Clerk &#8594; Network Share</div>
+    </div>
+    <span class="section-anchor" id="two-pipelines"></span>
+    <h3>The Two Pipelines</h3>
+    <p>All documents flow through one of two pipelines, depending on the filing type:</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+      <div style="background: var(--white); border: 2px solid var(--blue-200); border-radius: var(--radius-lg); padding: 24px;">
+        <span class="pipeline-badge phase1">&#9679; Phase 1</span>
+        <h4 style="margin-top: 12px;">Civil Process / eAffidavits</h4>
+        <p style="font-size: 14px; color: var(--gray-600); margin-bottom: 8px;">One email in &#8594; one renamed PDF out.</p>
+        <p style="font-size: 13px; color: var(--gray-500);">Each incoming email produces exactly one PDF that is renamed according to court document type codes (e.g., AX02 &#8594; AX42 for Return of Service).</p>
+      </div>
+      <div style="background: var(--white); border: 2px solid var(--green-200); border-radius: var(--radius-lg); padding: 24px;">
+        <span class="pipeline-badge phase2">&#9679; Phase 2</span>
+        <h4 style="margin-top: 12px;">E-Filing / Petitions</h4>
+        <p style="font-size: 14px; color: var(--gray-600); margin-bottom: 8px;">Multiple emails &#8594; one merged PDF.</p>
+        <p style="font-size: 13px; color: var(--gray-500);">Related filings are collected and merged into a single PDF. The Lead Document (AX40) always comes first, followed by exhibits, then attachments.</p>
+      </div>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <text x="20" y="30" font-size="13" font-weight="700" fill="#1d4ed8">PHASE 1 &#8212; Affidavits</text>
+        <rect x="20" y="42" width="680" height="90" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+        <rect x="40" y="62" width="130" height="50" rx="8" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="105" y="84" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Tyler Email</text>
+        <text x="105" y="100" text-anchor="middle" font-size="9" fill="#64748b">e.g., AX02 doc</text>
+        <line x1="172" y1="87" x2="230" y2="87" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="201" y="80" text-anchor="middle" font-size="9" fill="#64748b">rename</text>
+        <rect x="234" y="62" width="130" height="50" rx="8" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="299" y="84" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Renamed PDF</text>
+        <text x="299" y="100" text-anchor="middle" font-size="9" fill="#64748b">AX02 &#8594; AX42</text>
+        <line x1="366" y1="87" x2="424" y2="87" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="395" y="80" text-anchor="middle" font-size="9" fill="#64748b">deliver</text>
+        <rect x="428" y="62" width="130" height="50" rx="8" fill="white" stroke="#93c5fd" stroke-width="1"/>
+        <text x="493" y="84" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">Network Share</text>
+        <text x="493" y="100" text-anchor="middle" font-size="9" fill="#64748b">Final output</text>
+        <text x="20" y="165" font-size="13" font-weight="700" fill="#15803d">PHASE 2 &#8212; Petitions</text>
+        <rect x="20" y="177" width="680" height="120" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+        <rect x="40" y="197" width="100" height="40" rx="6" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="90" y="221" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">AX40 Lead</text>
+        <rect x="40" y="243" width="100" height="40" rx="6" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="90" y="267" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Exhibits</text>
+        <rect x="148" y="243" width="100" height="40" rx="6" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="198" y="267" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Attachments</text>
+        <line x1="142" y1="217" x2="290" y2="237" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <line x1="142" y1="263" x2="290" y2="247" stroke="#22c55e" stroke-width="1.5"/>
+        <line x1="250" y1="263" x2="290" y2="250" stroke="#22c55e" stroke-width="1.5"/>
+        <rect x="294" y="222" width="120" height="46" rx="8" fill="#16a34a"/>
+        <text x="354" y="242" text-anchor="middle" font-size="11" font-weight="700" fill="white">Merge PDFs</text>
+        <text x="354" y="258" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Lead &#8594; Exhibits &#8594; Att.</text>
+        <line x1="416" y1="245" x2="460" y2="245" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="464" y="222" width="120" height="46" rx="8" fill="white" stroke="#86efac" stroke-width="1"/>
+        <text x="524" y="242" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">Merged PDF</text>
+        <text x="524" y="258" text-anchor="middle" font-size="9" fill="#64748b">Single output file</text>
+        <rect x="530" y="190" width="156" height="24" rx="4" fill="#fef2f2" stroke="#fecaca"/>
+        <text x="608" y="206" text-anchor="middle" font-size="10" fill="#dc2626">&#10005; AX69, AX81, CL excluded</text>
+      </svg>
+      <div class="diagram-label">Fig. 2 &#8212; Phase 1 (one-to-one) and Phase 2 (many-to-one merge) document pipelines</div>
+    </div>
+  </div>

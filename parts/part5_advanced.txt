@@ -1,0 +1,118 @@
+
+  <span class="section-anchor" id="deduplication"></span>
+  <div class="section">
+    <h2><span class="section-number">12</span> Lead Document Deduplication <span class="version-badge v44">v4.4</span></h2>
+    <p class="section-desc">How PCP Nexus prevents duplicate petition filings.</p>
+    <p>When a petition is amended and filed more than once, the system automatically compares the <strong>Date Submitted</strong> values. Only the newest submission is kept &#8212; the older version is discarded. This ensures only one row per unique lead document appears in the CSV and only the most current filing enters the merged PDF.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 600 150" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <rect x="10" y="30" width="160" height="55" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+        <text x="90" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#dc2626">AX40 &#8212; Filed Mar 1</text>
+        <text x="90" y="72" text-anchor="middle" font-size="10" fill="#94a3b8">Older submission</text>
+        <rect x="10" y="95" width="160" height="55" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+        <text x="90" y="120" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">AX40 &#8212; Filed Mar 5</text>
+        <text x="90" y="137" text-anchor="middle" font-size="10" fill="#94a3b8">Newer submission</text>
+        <line x1="172" y1="57" x2="240" y2="90" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="260" y="68" font-size="22" fill="#dc2626">&#10005;</text>
+        <line x1="172" y1="122" x2="310" y2="122" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowBlue)"/>
+        <rect x="320" y="97" width="160" height="55" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <text x="400" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">&#10003; Kept</text>
+        <text x="400" y="137" text-anchor="middle" font-size="10" fill="#94a3b8">Newest version wins</text>
+      </svg>
+      <div class="diagram-label">Fig. 4 &#8212; Deduplication: when duplicate lead documents arrive, only the newest is retained</div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="csv-handoff"></span>
+  <div class="section">
+    <h2><span class="section-number">13</span> Safe CSV Handoff <span class="version-badge v45">v4.5</span></h2>
+    <p class="section-desc">How your daily CSV report is securely transferred every night.</p>
+    <p>Each night, PCP Nexus transfers the day's in-progress CSV to its final archive destination using a verified, four-step process:</p>
+    <ol class="steps">
+      <li><div class="step-content"><strong>Copy</strong><br>The in-progress CSV is copied to the archive destination. <span class="version-badge v45">v4.5</span> This destination is now the root PDF output folder, bypassing the legacy <code>DONE</code> folder.</div></li>
+      <li><div class="step-content"><strong>Verify</strong><br>A SHA-256 hash confirms the copy is <strong>completely identical</strong> to the source file. If the hashes don't match, the handoff is aborted and retried.</div></li>
+      <li><div class="step-content"><strong>Delete</strong><br>The in-progress copy is deleted <strong>only</strong> after verification passes.</div></li>
+      <li><div class="step-content"><strong>Roll Forward</strong><br>A blank CSV with tomorrow's date is created, ensuring late-arriving emails don't mix with today's completed data.</div></li>
+    </ol>
+    <div class="callout new">
+      <div class="callout-icon">&#127381;</div>
+      <div class="callout-content">
+        <strong>New in v4.5 &#8212; Independent Handoff Polling</strong>
+        <p>The CSV handoff routine now runs on its own 5-minute polling cycle, completely independent of the main engine state. This means the handoff will execute on schedule <strong>even if the engine is stopped or idle</strong>.</p>
+      </div>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 660 120" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+        <rect x="10" y="30" width="120" height="60" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+        <text x="70" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">In-Progress</text>
+        <text x="70" y="73" text-anchor="middle" font-size="10" fill="#64748b">CSV</text>
+        <line x1="132" y1="60" x2="165" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="148" y="52" text-anchor="middle" font-size="8" fill="#94a3b8">copy</text>
+        <rect x="170" y="30" width="100" height="60" rx="8" fill="#fefce8" stroke="#fde68a"/>
+        <text x="220" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#a16207">SHA-256</text>
+        <text x="220" y="73" text-anchor="middle" font-size="10" fill="#64748b">Verify</text>
+        <line x1="272" y1="60" x2="305" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="288" y="52" text-anchor="middle" font-size="8" fill="#94a3b8">match?</text>
+        <rect x="310" y="30" width="100" height="60" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+        <text x="360" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">Delete</text>
+        <text x="360" y="73" text-anchor="middle" font-size="10" fill="#64748b">Source</text>
+        <line x1="412" y1="60" x2="445" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="450" y="30" width="100" height="60" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+        <text x="500" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">Roll</text>
+        <text x="500" y="73" text-anchor="middle" font-size="10" fill="#64748b">Forward</text>
+        <line x1="552" y1="60" x2="585" y2="60" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <rect x="590" y="30" width="60" height="60" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <text x="620" y="57" text-anchor="middle" font-size="16">&#10003;</text>
+        <text x="620" y="76" text-anchor="middle" font-size="9" fill="#16a34a">Done</text>
+      </svg>
+      <div class="diagram-label">Fig. 5 &#8212; Safe CSV handoff: copy &#8594; verify &#8594; delete &#8594; roll forward</div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="backfill"></span>
+  <div class="section">
+    <h2><span class="section-number">14</span> Hourly CSV-to-Database Backfill <span class="version-badge v45">v4.5</span></h2>
+    <p class="section-desc">Automatic gap prevention for the internal database.</p>
+    <p>Every 60 minutes, PCP Nexus parses the current in-progress CSV and inserts any missing records into the internal SQLite database. This prevents tracking gaps that could occur if the application crashed mid-cycle or was restarted unexpectedly.</p>
+    <div class="callout admin">
+      <div class="callout-icon">&#128721;</div>
+      <div class="callout-content">
+        <strong>Automatic Data Sanitization</strong>
+        <p>The backfill routine now includes an inline <code>_s()</code> sanitizer. It automatically strips legacy <code>="value"</code> formatting from all core fields (filenames, case numbers, dates) before they are written to the database. This ensures compatibility with downstream robotic automation and permanent removal of the reverted Excel-safe escaping logic.</p>
+      </div>
+    </div>
+    <div class="callout tip">
+      <div class="callout-icon">&#128161;</div>
+      <div class="callout-content">
+        <strong>This Runs Automatically</strong>
+        <p>No operator action is required. The backfill process is silent and runs in the background. You can verify it's working by checking the database record counts against the CSV row counts during weekly spot-checks.</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="section-anchor" id="keywords"></span>
+  <div class="section">
+    <h2><span class="section-number">15</span> Keyword Monitoring &amp; Exceptions</h2>
+    <p class="section-desc">How the system flags documents that need human review.</p>
+    <p>PCP Nexus scans the <strong>Accepted Comments</strong> field of each email for specific legal keywords. When a match is found, the document processes normally but is also flagged for manual review.</p>
+    <h3>What Happens When a Keyword Is Detected</h3>
+    <ol class="steps">
+      <li><div class="step-content"><strong>Document Processes Normally</strong><br>The PDF is renamed/merged and delivered as usual &#8212; processing is not blocked.</div></li>
+      <li><div class="step-content"><strong>Email Routes to Exceptions</strong><br>The source email is moved to the Exceptions folder for visibility.</div></li>
+      <li><div class="step-content"><strong>Dashboard Alert Appears</strong><br>A red alert indicator appears on the Dashboard in the Manual Review Queue.</div></li>
+    </ol>
+    <h3>Monitored Keywords</h3>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0;">
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">deny</code>
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">fee</code>
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">dismissed</code>
+      <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">dwop</code>
+    </div>
+    <div class="callout warning">
+      <div class="callout-icon">&#9888;&#65039;</div>
+      <div class="callout-content">
+        <strong>Always Review Keyword Hits</strong>
+        <p>These keywords may indicate legally significant changes (denied filings, dismissed cases, fee requirements). Review the full comment text in the Dashboard's "Comments &amp; Follow-up" section before clearing the alert.</p>
+      </div>
+    </div>
+  </div>
