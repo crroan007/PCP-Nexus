@@ -182,7 +182,7 @@
     <span class="header-title">PCP Nexus</span>
     <span class="header-subtitle">User Manual</span>
   </div>
-  <span class="header-version">v4.5 &mdash; March 2026</span>
+  <span class="header-version">v4.5 &mdash; March 25, 2026</span>
 </header>
 
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -225,7 +225,7 @@
     <p>Mission-critical document automation for court filings. This guide covers everything you need to operate, monitor, and maintain PCP Nexus &mdash; from daily checks to advanced configuration.</p>
     <div class="hero-meta">
       <span><span class="dot blue"></span> Version 4.5</span>
-      <span><span class="dot green"></span> March 2026</span>
+      <span><span class="dot green"></span> March 25, 2026</span>
       <span>Professional Civil Process of Texas, Inc.</span>
     </div>
   </div>
@@ -619,11 +619,18 @@
     <table>
       <thead><tr><th>Section</th><th>What It Shows</th><th>Action Required</th></tr></thead>
       <tbody>
-        <tr><td><strong>Manual Review Queue</strong></td><td>Items needing human attention: OCR failures, missing lead documents, keyword-flagged items.</td><td>Click <strong>Resolve</strong> after reviewing each item.</td></tr>
+        <tr><td><strong>Manual Review Queue</strong></td><td>Items needing human attention: OCR failures, missing lead documents, keyword-flagged items. <span class="version-badge v45" style="background: var(--blue-100); color: var(--blue-700);">No Date Filter</span></td><td>Click <strong>Resolve</strong> after reviewing each item. Unresolved items remain visible across days.</td></tr>
         <tr><td><strong>Comments &amp; Follow-up</strong></td><td>Full comment text from keyword-flagged documents.</td><td>Review for legal significance and take appropriate action.</td></tr>
-        <tr><td><strong>Recent Filings</strong></td><td>Chronological log of all documents processed and delivered.</td><td>Use for spot-checks and audit trail verification.</td></tr>
+        <tr><td><strong>Recent Filings</strong></td><td>Chronological log of documents processed and delivered <strong>today</strong> (since midnight). <span class="version-badge v45" style="background: var(--green-100); color: var(--green-700);">Start-of-Day Reset</span></td><td>Use for same-day spot-checks and activity verification.</td></tr>
       </tbody>
     </table>
+    <div class="callout tip">
+      <div class="callout-icon">&#128337;</div>
+      <div class="callout-content">
+        <strong>Automatic Midnight Reset</strong>
+        <p>All Dashboard scorecards and the "Recent Filings" table reset to zero at exactly midnight. The activity log header has been renamed to <strong>"Today's Activity Log"</strong> to reflect this calendar-day behavior.</p>
+      </div>
+    </div>
   </div>
 
   <span class="section-anchor" id="deduplication"></span>
@@ -698,9 +705,16 @@
 
   <span class="section-anchor" id="backfill"></span>
   <div class="section">
-    <h2><span class="section-number">14</span> Hourly CSV-to-Database Backfill <span class="version-badge v44">v4.4</span></h2>
+    <h2><span class="section-number">14</span> Hourly CSV-to-Database Backfill <span class="version-badge v45">v4.5</span></h2>
     <p class="section-desc">Automatic gap prevention for the internal database.</p>
     <p>Every 60 minutes, PCP Nexus parses the current in-progress CSV and inserts any missing records into the internal SQLite database. This prevents tracking gaps that could occur if the application crashed mid-cycle or was restarted unexpectedly.</p>
+    <div class="callout admin">
+      <div class="callout-icon">&#128721;</div>
+      <div class="callout-content">
+        <strong>Automatic Data Sanitization</strong>
+        <p>The backfill routine now includes an inline <code>_s()</code> sanitizer. It automatically strips legacy <code>="value"</code> formatting from all core fields (filenames, case numbers, dates) before they are written to the database. This ensures compatibility with downstream robotic automation and permanent removal of the reverted Excel-safe escaping logic.</p>
+      </div>
+    </div>
     <div class="callout tip">
       <div class="callout-icon">&#128161;</div>
       <div class="callout-content">
@@ -742,7 +756,7 @@
     <h2><span class="section-number">16</span> Troubleshooting</h2>
     <p class="section-desc">Common issues and how to resolve them.</p>
     <div class="diagram-container">
-      <svg viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
+      <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
         <text x="350" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Troubleshooting Decision Tree</text>
         <rect x="260" y="35" width="180" height="40" rx="20" fill="#3b82f6"/>
         <text x="350" y="60" text-anchor="middle" font-size="12" font-weight="600" fill="white">Something seems wrong</text>
@@ -760,9 +774,8 @@
         <text x="465" y="108" font-size="10" fill="#22c55e" font-weight="600">YES</text>
         <rect x="420" y="148" width="180" height="36" rx="6" fill="#fef3c7" stroke="#fbbf24"/>
         <text x="510" y="171" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">Is it stalled (&gt;2 min)?</text>
-        <line x1="600" y1="166" x2="640" y2="166" stroke="#64748b" stroke-width="1"/>
-        <rect x="644" y="148" width="110" height="36" rx="8" fill="#f0fdf4" stroke="#86efac"/>
-        <text x="699" y="171" text-anchor="middle" font-size="10" font-weight="600" fill="#22c55e">NO &#8594; Wait</text>
+        <line x1="600" y1="166" x2="660" y2="166" stroke="#64748b" stroke-width="1"/>
+        <text x="660" y="163" font-size="10" fill="#22c55e" font-weight="600">NO &#8594; Wait</text>
         <line x1="510" y1="184" x2="510" y2="210" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
         <text x="522" y="200" font-size="10" fill="#dc2626" font-weight="600">YES</text>
         <rect x="420" y="213" width="180" height="50" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
@@ -819,12 +832,31 @@
     <table>
       <thead><tr><th>Version</th><th>Date</th><th>Summary</th></tr></thead>
       <tbody>
-        <tr><td><span class="version-badge v45">v4.5</span></td><td>March 18, 2026</td><td>CSV handoff now delivers directly to root output folders (bypassing legacy DONE folders). Independent 5-minute CSV handoff polling decoupled from main engine state.</td></tr>
+        <tr><td><span class="version-badge v45">v4.5</span></td><td>March 25, 2026</td><td>Full v4.5 release: Reverted Excel-safe CSV formatting, implemented <code>_s()</code> backfill sanitization, fixed midnight dashboard resets, and confirmed direct-to-root nightly handoffs.</td></tr>
         <tr><td><span class="version-badge v44">v4.4</span></td><td>March 8, 2026</td><td>Lead Document deduplication, Clerk Letter filter fix (CL + digits), hourly CSV-to-database backfill, comment keyword monitoring, and safe CSV handoff protocol.</td></tr>
         <tr><td><strong style="color: var(--gray-500);">v4.3</strong></td><td>March 4, 2026</td><td>Full user manual; expanded requirements, SOPs, workflows, dashboard, recovery behavior, and operational checklists.</td></tr>
         <tr><td><strong style="color: var(--gray-500);">v4.2</strong></td><td>Feb 10, 2026</td><td>Tyler multi-document download improvements and Phase 2 output naming updates.</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <span class="section-anchor" id="changelog"></span>
+  <div class="section">
+    <h2><span class="section-number">19</span> Change Log</h2>
+    <p class="section-desc">A persistent log of all engine and dashboard modifications.</p>
+    <div class="changelog-container">
+      <div class="changelog-entry">
+        <div class="changelog-date">March 25, 2026</div>
+        <div class="changelog-content">
+          <ul>
+            <li><strong>CSV Safety:</strong> Completely reverted <code>="value"</code> escaping logic to ensure compatibility with downstream robotic bots. Verified all network files are clean of non-standard characters.</li>
+            <li><strong>Handoff Reliability:</strong> Confirmed 5-minute independent polling for nightly CSV handoffs. Files now deliver directly to root PDF output folders (bypassing legacy <code>DONE</code> folder).</li>
+            <li><strong>Dashboard Analytics:</strong> Fixed <code>time_filter</code> in <code>dashboard_generator.py</code> to reset all scorecards at midnight. Restricted "Recent Filings" to documents processed today. Renamed log to "Today's Activity Log".</li>
+            <li><strong>Database Sanitization:</strong> retroactively cleaned 109 filename records and 130 JSON fields. Added <code>_s()</code> inline sanitizer to <code>realtime_exporter.py</code> to prevent future re-contamination from legacy CSVs.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="footer">
@@ -836,6 +868,35 @@
 </div>
 </main>
 
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-overlay').classList.toggle('open');
+  }
+  var sections = document.querySelectorAll('.section-anchor');
+  var navLinks = document.querySelectorAll('.nav-link');
+  function updateActiveNav() {
+    var current = '';
+    sections.forEach(function(section) {
+      var rect = section.getBoundingClientRect();
+      if (rect.top <= 120) { current = section.id; }
+    });
+    navLinks.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) { link.classList.add('active'); }
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.querySelector('.sidebar-overlay').classList.remove('open');
+      }
+    });
+  });
+</script>
 <script>
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');

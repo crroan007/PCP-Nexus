@@ -5,8 +5,8 @@ import os
 DIR = os.path.dirname(os.path.abspath(__file__))
 PARTS_DIR = os.path.join(DIR, "parts")
 
-# Read the CSS skeleton
-with open(os.path.join(DIR, "index.html"), "r", encoding="utf-8") as f:
+# Read the CSS skeleton from template.html
+with open(os.path.join(DIR, "template.html"), "r", encoding="utf-8") as f:
     skeleton = f.read()
 
 # Read all body parts in order
