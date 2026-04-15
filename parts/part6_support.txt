@@ -3,6 +3,10 @@
   <div class="section">
     <h2><span class="section-number">16</span> Troubleshooting</h2>
     <p class="section-desc">Common issues and how to resolve them.</p>
+<div class="callout-box" style="margin: 1rem 0; padding: 1rem; background: rgba(251, 191, 36, 0.08); border-left: 3px solid #fbbf24; border-radius: 0 8px 8px 0;">
+<strong>NO_LEAD Exception (all emails present):</strong> Clear the <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">PCP-Packetized</code> tag from the emails in the input folder, and the system will reprocess them on the next cycle. In v4.5.1+, this scenario is prevented by the stabilization delay.
+</div>
+
     <div class="diagram-container">
       <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
         <text x="350" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Troubleshooting Decision Tree</text>
@@ -94,54 +98,17 @@
     <p class="section-desc">A persistent log of all engine and dashboard modifications.</p>
     <div class="changelog-container">
       <div class="changelog-entry">
-        <div class="changelog-date">March 25, 2026</div>
+        <div class="changelog-date">April 15, 2026</div>
         <div class="changelog-content">
           <ul>
-            <li><strong>CSV Safety:</strong> Completely reverted <code>="value"</code> escaping logic to ensure compatibility with downstream robotic bots. Verified all network files are clean of non-standard characters.</li>
-            <li><strong>Handoff Reliability:</strong> Confirmed 5-minute independent polling for nightly CSV handoffs. Files now deliver directly to root PDF output folders (bypassing legacy <code>DONE</code> folder).</li>
-            <li><strong>Dashboard Analytics:</strong> Fixed <code>time_filter</code> in <code>dashboard_generator.py</code> to reset all scorecards at midnight. Restricted "Recent Filings" to documents processed today. Renamed log to "Today's Activity Log".</li>
-            <li><strong>Database Sanitization:</strong> retroactively cleaned 109 filename records and 130 JSON fields. Added <code>_s()</code> inline sanitizer to <code>realtime_exporter.py</code> to prevent future re-contamination from legacy CSVs.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <p><strong>PCP Nexus</strong> &#8212; Professional Civil Process of Texas, Inc.</p>
-    <p>Version 4.5 &#8226; March 2026 &#8226; Mission-Critical Document Automation</p>
-    <p style="margin-top: 8px;">Questions? Contact your system administrator.</p>
-  </div>
-
+<li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when emails arrive simultaneously. Exception emails now route to <li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-<li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when <li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when <li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when emails arrive simultaneously. Exception emails now route to AI Exceptions folder. Sweep routes by packet status.</li></li>emails arrive simultaneously. Exception emails now route to AI Exceptions folder. Sweep routes by packet status.</li></li>emails arrive simultaneously. Exception emails now route to AI Exceptions folder. Sweep routes by packet status.</li>emails arrive simultaneously. Exception emails now route to AI Exceptions folder. Sweep routes by packet status.</li>
+<li><strong>CSV Safety:</strong> Completely reverted <code>="value"</code> escaping logic to ensure compatibility with downstream robotic bots. Verified all network files are clean of non-standard characters.</li>
+<li><strong>Handoff Reliability:</strong> Confirmed 5-minute independent polling for nightly CSV handoffs. Files now deliver directly to root PDF output folders (bypassing legacy <code>DONE</code> folder).</li>
+<li><strong>Dashboard Analytics:</strong> Fixed <code>time_filter</code> in <code>dashboard_generator.py</code> to reset all scorecards at midnight. Restricted "Recent Filings" to documents processed today. Renamed log to "Today's Activity Log".</li>
+<li><strong>Database Sanitization:</strong> retroactively cleaned 109 filename records and 130 JSON fields. Added <code>_s()</code> inline sanitizer to <code>realtime_exporter.py</code> to prevent future re-contamination from legacy CSVs.</li>
+</ul>
 </div>
-</main>
-
-<script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.querySelector('.sidebar-overlay').classList.toggle('open');
-  }
-  var sections = document.querySelectorAll('.section-anchor');
-  var navLinks = document.querySelectorAll('.nav-link');
-  function updateActiveNav() {
-    var current = '';
-    sections.forEach(function(section) {
-      var rect = section.getBoundingClientRect();
-      if (rect.top <= 120) { current = section.id; }
-    });
-    navLinks.forEach(function(link) {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === '#' + current) { link.classList.add('active'); }
-    });
-  }
-  window.addEventListener('scroll', updateActiveNav, { passive: true });
-  updateActiveNav();
-  navLinks.forEach(function(link) {
-    link.addEventListener('click', function() {
-      if (window.innerWidth <= 900) {
-        document.getElementById('sidebar').classList.remove('open');
-        document.querySelector('.sidebar-overlay').classList.remove('open');
-      }
-    });
-  });
-</script>
+</div>
+</div>
+<p>Version 4.5.1 &#8226; April 2026 &#8226; Mission-Critical Document Automation</p>
+</div>
