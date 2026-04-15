@@ -116,3 +116,21 @@
       </div>
     </div>
   </div>
+
+
+<!-- v4.5.1 Section -->
+<section id="packet-stabilization">
+<div class="section">
+<h2><span class="section-number">15a</span> Phase 2 Packet Stabilization <span class="version-badge">v4.5.1</span></h2>
+<p class="section-desc">Preventing race conditions with simultaneous emails.</p>
+<p>When multiple emails for the same envelope arrive at the exact same moment, a 5-minute stabilization window ensures all parts are collected before the merge begins. Previously, the merge could start before all emails were packetized, causing false NO_LEAD exceptions. This fix runs within the existing 20-minute aggregation window with no change to overall processing speed.</p>
+</div>
+</section>
+
+<section id="exception-routing">
+<div class="section">
+<h2><span class="section-number">15b</span> Exception Email Routing <span class="version-badge">v4.5.1</span></h2>
+<p class="section-desc">Failed packets now route to AI Exceptions.</p>
+<p>Emails from failed packets (e.g., NO_LEAD timeout) are now automatically moved to the <strong>AI Exceptions</strong> folder instead of remaining in the input folder. This makes all failures visible to staff for manual review. The background sweep also correctly routes orphaned emails from failed packets to Exceptions rather than Completed.</p>
+</div>
+</section>
