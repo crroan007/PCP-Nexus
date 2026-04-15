@@ -85,6 +85,9 @@
       <div class="callout-content">
         <strong>Wait State</strong>
         <p>If exhibits or attachments arrive before the Lead Document (AX40), they are held in a queue. Merging only begins once the Lead Document is present.</p>
+<div class="info-box" style="margin-top: 1rem; padding: 1rem; background: rgba(99, 102, 241, 0.08); border-left: 3px solid #6366f1; border-radius: 0 8px 8px 0;">
+  <strong>Stabilization (v4.5.1):</strong> After all emails are collected, the system waits 5 minutes of &ldquo;quiet time&rdquo; (no new emails arriving) before merging. This prevents incomplete merges when multiple emails arrive at the exact same moment.
+</div>
       </div>
     </div>
   </div>
