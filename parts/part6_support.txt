@@ -1,114 +1,91 @@
+## 16 Troubleshooting
+Common issues and how to resolve them.
 
-  <span class="section-anchor" id="troubleshooting"></span>
-  <div class="section">
-    <h2><span class="section-number">16</span> Troubleshooting</h2>
-    <p class="section-desc">Common issues and how to resolve them.</p>
-<div class="callout-box" style="margin: 1rem 0; padding: 1rem; background: rgba(251, 191, 36, 0.08); border-left: 3px solid #fbbf24; border-radius: 0 8px 8px 0;">
-<strong>NO_LEAD Exception (all emails present):</strong> Clear the <code style="background: var(--red-50); border-color: var(--red-200); color: var(--red-700); padding: 4px 12px; font-size: 13px;">PCP-Packetized</code> tag from the emails in the input folder, and the system will reprocess them on the next cycle. In v4.5.1+, this scenario is prevented by the stabilization delay.
-</div>
+### Engine Stalled
+Wait 2 minutes. If no recovery, restart the app from the desktop shortcut or via the PCP-StartNexus scheduled task.
 
-    <div class="diagram-container">
-      <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" style="font-family: Inter, sans-serif;">
-        <text x="350" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Troubleshooting Decision Tree</text>
-        <rect x="260" y="35" width="180" height="40" rx="20" fill="#3b82f6"/>
-        <text x="350" y="60" text-anchor="middle" font-size="12" font-weight="600" fill="white">Something seems wrong</text>
-        <line x1="350" y1="75" x2="350" y2="95" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
-        <rect x="260" y="95" width="180" height="36" rx="6" fill="#fef3c7" stroke="#fbbf24"/>
-        <text x="350" y="118" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">Is the engine running?</text>
-        <line x1="260" y1="113" x2="120" y2="113" stroke="#64748b" stroke-width="1"/>
-        <line x1="120" y1="113" x2="120" y2="145" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
-        <text x="190" y="108" font-size="10" fill="#dc2626" font-weight="600">NO</text>
-        <rect x="30" y="148" width="180" height="50" rx="8" fill="#f0fdf4" stroke="#86efac"/>
-        <text x="120" y="170" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Click Start Engine</text>
-        <text x="120" y="186" text-anchor="middle" font-size="9" fill="#64748b">Check status bar turns green</text>
-        <line x1="440" y1="113" x2="510" y2="113" stroke="#64748b" stroke-width="1"/>
-        <line x1="510" y1="113" x2="510" y2="145" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
-        <text x="465" y="108" font-size="10" fill="#22c55e" font-weight="600">YES</text>
-        <rect x="420" y="148" width="180" height="36" rx="6" fill="#fef3c7" stroke="#fbbf24"/>
-        <text x="510" y="171" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">Is it stalled (&gt;2 min)?</text>
-        <line x1="600" y1="166" x2="660" y2="166" stroke="#64748b" stroke-width="1"/>
-        <text x="660" y="163" font-size="10" fill="#22c55e" font-weight="600">NO &#8594; Wait</text>
-        <line x1="510" y1="184" x2="510" y2="210" stroke="#64748b" stroke-width="1" marker-end="url(#arrowBlue)"/>
-        <text x="522" y="200" font-size="10" fill="#dc2626" font-weight="600">YES</text>
-        <rect x="420" y="213" width="180" height="50" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
-        <text x="510" y="235" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">Restart the application</text>
-        <text x="510" y="251" text-anchor="middle" font-size="9" fill="#64748b">If persists &#8594; contact Admin</text>
-      </svg>
-      <div class="diagram-label">Fig. 6 &#8212; Troubleshooting decision tree for common issues</div>
-    </div>
-    <table>
-      <thead><tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Engine appears stalled</strong></td><td>Temporary processing delay or resource lock</td><td>Wait 2 minutes. If no recovery, restart the application.</td></tr>
-        <tr><td><strong>Nightly handover did not complete</strong></td><td>Workstation was powered off before 10:15 PM, or network share was unavailable</td><td>Verify the PC was on at 9:45 PM. Check network share connection. The handoff will retry on the next 5-minute cycle.</td></tr>
-        <tr><td><strong>Missing emails / no documents processing</strong></td><td>Folder configuration mismatch in Outlook settings</td><td>Contact your Administrator to verify Outlook folder mappings.</td></tr>
-        <tr><td><strong>Red alert on Dashboard</strong></td><td>Keyword detected in email comments</td><td>Review the flagged item in the Dashboard. Clear using the "Resolve" button after taking appropriate action.</td></tr>
-      </tbody>
-    </table>
-  </div>
+### No Handover
+Ensure the PC was on at 9:45 PM. Check network share connection. The handoff polls every 5 minutes independently of the engine.
 
-  <span class="section-anchor" id="checklists"></span>
-  <div class="section">
-    <h2><span class="section-number">17</span> Operational Checklists</h2>
-    <p class="section-desc">Printable reference checklists for daily and weekly operations.</p>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-      <div class="checklist">
-        <h4>&#9728;&#65039; Daily Checklist</h4>
-        <ul>
-          <li>Confirm engine status is <strong>Running</strong> (green)</li>
-          <li>Verify Dashboard is updating with new filings</li>
-          <li>Review the Exceptions folder for flagged items</li>
-          <li>Check Manual Review Queue on Dashboard</li>
-          <li>Resolve any keyword-flagged alerts</li>
-          <li>Verify previous night's handover completed</li>
-          <li>Leave workstation ON past 10:15 PM</li>
-        </ul>
-      </div>
-      <div class="checklist">
-        <h4>&#128197; Weekly Checklist</h4>
-        <ul>
-          <li>Spot-check CSV accuracy against delivered PDFs</li>
-          <li>Verify network share paths are accessible</li>
-          <li>Review database record counts vs. CSV rows</li>
-          <li>Check log files for recurring warnings</li>
-          <li>Confirm Outlook mailbox connection is stable</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+### Missing Emails
+Likely a folder configuration mismatch. Contact admin to verify the mailbox and folder paths in Settings.
 
-  <span class="section-anchor" id="revision-history"></span>
-  <div class="section">
-    <h2><span class="section-number">18</span> Revision History</h2>
-    <p class="section-desc">Change log for PCP Nexus and this manual.</p>
-    <table>
-      <thead><tr><th>Version</th><th>Date</th><th>Summary</th></tr></thead>
-      <tbody>
-        <tr><td><span class="version-badge v45">v4.5</span></td><td>March 25, 2026</td><td>Full v4.5 release: Reverted Excel-safe CSV formatting, implemented <code>_s()</code> backfill sanitization, fixed midnight dashboard resets, and confirmed direct-to-root nightly handoffs.</td></tr>
-        <tr><td><span class="version-badge v44">v4.4</span></td><td>March 8, 2026</td><td>Lead Document deduplication, Clerk Letter filter fix (CL + digits), hourly CSV-to-database backfill, comment keyword monitoring, and safe CSV handoff protocol.</td></tr>
-        <tr><td><strong style="color: var(--gray-500);">v4.3</strong></td><td>March 4, 2026</td><td>Full user manual; expanded requirements, SOPs, workflows, dashboard, recovery behavior, and operational checklists.</td></tr>
-        <tr><td><strong style="color: var(--gray-500);">v4.2</strong></td><td>Feb 10, 2026</td><td>Tyler multi-document download improvements and Phase 2 output naming updates.</td></tr>
-      </tbody>
-    </table>
-  </div>
+### "Phase 2: e-filing folders unavailable"
+Outlook has lost its connection to the efiling shared mailbox. Close and reopen Outlook, then restart PCP Nexus. All emails remain safe in the mailbox - no data is lost. This typically occurs after a network interruption or Outlook session timeout.
 
-  <span class="section-anchor" id="changelog"></span>
-  <div class="section">
-    <h2><span class="section-number">19</span> Change Log</h2>
-    <p class="section-desc">A persistent log of all engine and dashboard modifications.</p>
-    <div class="changelog-container">
-      <div class="changelog-entry">
-        <div class="changelog-date">April 15, 2026</div>
-        <div class="changelog-content">
-          <ul>
-<li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when emails arrive simultaneously. Exception emails now route to <li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-<li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when <li><strong>Packet Stabilization (v4.5.1):</strong> Added 5-minute stabilization delay to prevent race conditions when emails arrive simultaneously. Exception emails now route to AI Exceptions folder. Sweep routes by packet status.</li>
-<li><strong>CSV Safety:</strong> Completely reverted <code>="value"</code> escaping logic to ensure compatibility with downstream robotic bots. Verified all network files are clean of non-standard characters.</li>
-<li><strong>Handoff Reliability:</strong> Confirmed 5-minute independent polling for nightly CSV handoffs. Files now deliver directly to root PDF output folders (bypassing legacy <code>DONE</code> folder).</li>
-<li><strong>Dashboard Analytics:</strong> Fixed <code>time_filter</code> in <code>dashboard_generator.py</code> to reset all scorecards at midnight. Restricted "Recent Filings" to documents processed today. Renamed log to "Today's Activity Log".</li>
-<li><strong>Database Sanitization:</strong> retroactively cleaned 109 filename records and 130 JSON fields. Added <code>_s()</code> inline sanitizer to <code>realtime_exporter.py</code> to prevent future re-contamination from legacy CSVs.</li>
-</ul>
-</div>
-</div>
-</div>
-<p>Version 4.5.1 &#8226; April 2026 &#8226; Mission-Critical Document Automation</p>
-</div>
+### NO_LEAD Exception (all emails present)
+Clear the PCP-Packetized tag from the emails in the AI Exceptions or input folder, then restart the engine. The system will re-scan and reprocess them on the next cycle. In v4.5.2+, this scenario is largely prevented by the late-arriving document fix and stabilization delay.
+
+```
+PCP-Packetized
+```
+
+### "No Logs" on Dashboard Exceptions
+Resolved in v4.5.2. Exception items now show full error details and recovery steps. For older items created before v4.5.2, the resolution is the same: clear the PCP-Packetized tag from the source emails to reprocess.
+
+## 17 Operational Checklists
+Printable reference checklists for daily and weekly operations.
+
+#### Daily Checklist
+- Confirm engine status is Running (green)
+- Verify Dashboard is updating with new filings
+- Review the Exceptions folder for flagged items
+- Check Manual Review Queue on Dashboard
+- Resolve any keyword-flagged alerts
+- Verify previous night's handover completed
+- Leave workstation ON past 10:15 PM
+
+#### Weekly Checklist
+- Spot-check CSV accuracy against delivered PDFs
+- Verify network share paths are accessible
+- Review database record counts vs. CSV rows
+- Check log files for recurring warnings
+- Confirm Outlook mailbox connection is stable
+
+## 18 Revision History
+Change log for PCP Nexus and this manual.
+
+```
+_s()
+```
+
+
+## 19 Change Log
+A persistent log of all engine and dashboard modifications.
+- Late-Arriving Document Fix (v4.5.2): Fixed critical race condition where lead documents (AX40) arriving in a separate scan batch were skipped because the packet already existed. PENDING packets now accept new documents. Dashboard exception items show detailed error info and recovery steps instead of "No Logs".
+- Packet Stabilization (v4.5.1): Added 5-minute stabilization delay to prevent race conditions when emails arrive simultaneously. Exception emails now route to AI Exceptions folder. Sweep routes by packet status.
+- CSV Safety: Completely reverted ="value" escaping logic to ensure compatibility with downstream robotic bots. Verified all network files are clean of non-standard characters.
+- Handoff Reliability: Confirmed 5-minute independent polling for nightly CSV handoffs. Files now deliver directly to root PDF output folders (bypassing legacy DONE folder).
+- Dashboard Analytics: Fixed time_filter in dashboard_generator.py to reset all scorecards at midnight. Restricted "Recent Filings" to documents processed today. Renamed log to "Today's Activity Log".
+- Database Sanitization: retroactively cleaned 109 filename records and 130 JSON fields. Added _s() inline sanitizer to realtime_exporter.py to prevent future re-contamination from legacy CSVs.
+
+```
+="value"
+```
+
+
+```
+DONE
+```
+
+
+```
+time_filter
+```
+
+
+```
+dashboard_generator.py
+```
+
+
+```
+_s()
+```
+
+
+```
+realtime_exporter.py
+```
+
+Version 4.5.2 - April 2026 - Mission-Critical Document Automation
